@@ -26,7 +26,7 @@ export default createStore({
       let message = useMessage()
       http.post('/user/login',data).then(res=>{
         console.log(message);
-        message.info(res.msg)
+        // message.info(res.msg)
         commit('LOGIN',res.data)
       })
     }
