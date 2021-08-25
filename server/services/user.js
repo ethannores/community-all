@@ -50,6 +50,7 @@ async function save(data) {
 //用户登录
 async function login(data) {
   const { username, password } = data
+  console.log(data)
   let returnData = {}
   if (!password) {
     return {

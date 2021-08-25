@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '../router/index'
 let http = axios.create({
   timeout:5000,
-  baseURL:'',
+  baseURL:'/api',
   headers: {
 		'content-type': 'application/json',
 	},

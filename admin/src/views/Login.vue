@@ -18,15 +18,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, getCurrentInstance, ref, watch } from "vue"
+import { useStore } from "vuex"
+
 export default defineComponent({
   setup() {
     const modelRef = ref({
       username: "admin",
       password: "admin.1",
     })
+    
+    const store = useStore();
+    watch(()=>store.state.user,(newVal,oldVal)=>{
+      console.log(newVal,oldVal)
+    })
     const loginHandle = function () {
-      console.log(modelRef.value.password)
+      store.dispatch('login',modelRef.value)
     }
     return {
       model: modelRef,
