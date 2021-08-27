@@ -18,19 +18,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, ref, watch } from "vue"
+import { defineComponent, ref, watch } from "vue"
 import { useStore } from "vuex"
-
+import router from '../router/index'
 export default defineComponent({
   setup() {
     const modelRef = ref({
       username: "admin",
       password: "admin.1",
     })
-    
     const store = useStore();
+    console.log(router)
     watch(()=>store.state.user,(newVal,oldVal)=>{
-      console.log(newVal,oldVal)
+      console.log(newVal)
+      if(newVal.username){
+        let path=router.currentRoute.value.query?.redirct?router.currentRoute.value.query.redirct:'/';
+        router.push(path as any)
+      }
     })
     const loginHandle = function () {
       store.dispatch('login',modelRef.value)

@@ -20,6 +20,13 @@ import {
   NRow,
   NCol,
   NMessageProvider,
+  NLayout,
+  NLayoutHeader,
+  NLayoutSider,
+  NLayoutContent,
+  NLayoutFooter,
+  NSwitch,
+  NMenu
 } from 'naive-ui'
 
 const naive = create({
@@ -33,6 +40,13 @@ const naive = create({
     NRow,
     NCol,
     NMessageProvider,
+    NLayout,
+    NLayoutHeader,
+    NLayoutSider,
+    NLayoutContent,
+    NLayoutFooter,
+    NSwitch,
+    NMenu
   ],
 })
 app.use(naive)

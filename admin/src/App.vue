@@ -1,7 +1,9 @@
 <template>
   <div>
     <router-view></router-view>
-    <n-message-provider></n-message-provider>
+    <n-message-provider>
+      <Message></Message>
+    </n-message-provider>
   </div>
 </template>
 
@@ -13,6 +15,7 @@ export default defineComponent({
 
 <script lang="ts" setup>
 import { defineComponent } from "vue"
+import Message from "./components/Message.vue"
 </script>
 
 <style>

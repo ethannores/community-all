@@ -22,8 +22,13 @@ http.interceptors.response.use(res=>{
     return res.data
   }
 },err=>{
-  if(err.response&&err.response.status){
-
+  if(err.response&&err.response.status==401){
+    router.replace({
+      path:'/login',
+      query:{
+        redirct:router.currentRoute.value.path
+      }
+    })
   }
 })
 
