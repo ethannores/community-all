@@ -1,5 +1,6 @@
 <template>
   <div>
+    <input type="file" id="upload_file" multiple @change="uploadHandle($event)" style="display:none;">
     <div id="editor"></div>
   </div>
 </template>
@@ -25,20 +26,35 @@ const toolbarOptions = [
   ["clean"], // 清除文本格式
   ["link", "image", "video"], // 链接、图片、视频
 ]
+let quillEditor
 export default defineComponent({
   setup() {
+    //定义上传事件
+    const uploadHandle = (e: any) => {
+      console.log(e.target.files)
+    }
+    //引入proxy
     let { proxy } = getCurrentInstance()
     onMounted(() => {
       proxy.$nextTick(() => {
-        new Quill("#editor", {
+        quillEditor = new Quill("#editor", {
           theme: "snow",
           modules: {
             toolbar: toolbarOptions,
           },
         })
+        var toolbar = quillEditor.getModule("toolbar")
+        toolbar.addHandler("image", function (value: any) {
+          if (value) {
+            //监听图片上传
+            document.getElementById("upload_file")?.click()
+          }
+        })
       })
     })
-    return {}
+    return {
+      uploadHandle,
+    }
   },
 })
 </script>

@@ -1,5 +1,5 @@
 const Model = require('../models/category')
-
+const mongoose  = require('mongoose')
 async function list(data) {
 	let page = +data.page || 1
 	let limit = +data.limit || 20
@@ -38,20 +38,21 @@ async function list(data) {
 	return findResult
 }
 async function save(data) {
-  let {_id}=data;
+  let {_id,title,pid,description}=data;
   let returnData={};
+  pid=pid?pid:null
   if(_id){
     //id存在则修改内容
     let findUpdateResult = await Model.findByIdAndUpdate({
       _id
     },{
-
+      title,pid,description
     })
     returnData['data']=findUpdateResult
   }else{
     //新增内容
     let saveResult = await Model.create({
-
+      title,pid,description
     })
     returnData['data']=saveResult
   }

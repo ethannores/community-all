@@ -33,6 +33,8 @@ require('./utils/db')()
 console.timeEnd('db connect:')
 
 //router表
+let { commonResponse } = require('./middleware/common')
+app.use(commonResponse)
 app.use('/user', require('./routes/user'))
 app.use('/post', require('./routes/post'))
 app.use('/message', require('./routes/message'))

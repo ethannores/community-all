@@ -3,7 +3,10 @@ const { Schema } = mongoose
 
 const ModelSchema = new Schema({
 	title: String,
-	pid:Schema.Types.ObjectId,
+	pid:{
+		type:Schema.Types.ObjectId,
+		default:null
+	},
 	description:String,
 	img:String
 })

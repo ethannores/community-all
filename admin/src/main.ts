@@ -4,9 +4,9 @@ import router from './router/index'
 import store from './store/index'
 //全局样式
 import './styles/base.scss'
-import http  from './util/http'
+import http from './util/http'
 const app = createApp(App)
-app.config.globalProperties.$http=http
+app.config.globalProperties.$http = http
 import {
   // create naive ui
   create,
@@ -26,7 +26,15 @@ import {
   NLayoutContent,
   NLayoutFooter,
   NSwitch,
-  NMenu
+  NMenu,
+  NUpload,
+  NUploadDragger,
+  NIcon,
+  NP,
+  NText,
+  NRadio,
+  NModal,
+  NCascader,NTable,NDataTable
 } from 'naive-ui'
 
 const naive = create({
@@ -46,7 +54,15 @@ const naive = create({
     NLayoutContent,
     NLayoutFooter,
     NSwitch,
-    NMenu
+    NMenu,
+    NUpload,
+    NUploadDragger,
+    NIcon,
+    NP,
+    NText,
+    NRadio,
+    NModal,
+    NCascader,NTable,NDataTable
   ],
 })
 app.use(naive)

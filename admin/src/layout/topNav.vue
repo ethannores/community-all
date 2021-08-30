@@ -1,44 +1,56 @@
 <template>
   <div>
-    <n-menu mode="horizontal"  @update:value="handleUpdateValue" inverted :options="menuOptions" />
+    <n-menu mode="horizontal" @update:value="handleUpdateValue" inverted :options="menuOptions" />
   </div>
 </template>
 
 <script lang="ts">
-import { h, defineComponent } from 'vue'
-import { NIcon } from 'naive-ui'
+import { h, defineComponent } from "vue"
+import { NIcon } from "naive-ui"
 import {
   BookOutline as BookIcon,
   PersonOutline as PersonIcon,
   WineOutline as WineIcon,
-  SettingsOutline as SettingIcon
-} from '@vicons/ionicons5'
-import router from '../router'
+  SettingsOutline as SettingIcon,
+  Apps as AppIcon,
+} from "@vicons/ionicons5"
+import router from "../router"
 
-function renderIcon (icon:any) {
+function renderIcon(icon: any) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 const menuOptions = [
   {
-    label: '仪表盘',
-    key: '/dashboard',
+    label: "仪表盘",
+    key: "/dashboard",
     // icon: renderIcon(BookIcon)
   },
   {
-    label: '系统设置',
-    key: '/settings/index',
+    label: "系统设置",
+    key: "/settings/index",
     icon: renderIcon(SettingIcon),
   },
   {
-    label: '帖子',
-    key:'/post/index',
+    label: "帖子",
+    key: "/post/index",
     icon: renderIcon(BookIcon),
-    children:[
+    children: [
       {
-        label:'帖子列表',
-        key:'/post/index'
-      }
-    ]
+        label: "帖子列表",
+        key: "/post/index",
+      },
+    ],
+  },
+  {
+    label: "分类",
+    key: "/category/index",
+    icon: renderIcon(AppIcon),
+    children: [
+      {
+        label: "分类列表",
+        key: "/category/index",
+      },
+    ],
   },
   // {
   //   label: '舞，舞，舞',
@@ -92,17 +104,16 @@ const menuOptions = [
 ]
 export default defineComponent({
   setup() {
-  const handleUpdateValue = function(key:string,old:any):void{
-        router.currentRoute.value.path!=key&&router.push(key as any)
-      }
-  return {
-    menuOptions,
-    handleUpdateValue,
-  };
-},
-});
+    const handleUpdateValue = function (key: string, old: any): void {
+      router.currentRoute.value.path != key && router.push(key as any)
+    }
+    return {
+      menuOptions,
+      handleUpdateValue,
+    }
+  },
+})
 </script>
 
 <style scoped>
-
 </style>
