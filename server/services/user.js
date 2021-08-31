@@ -87,8 +87,9 @@ async function login(data) {
   returnData['data'] = {
     username: findResult['username'],
     role: findResult['role'],
-    avatar: findResult['avatar'],
     permissions: findResult['permissions'],
+    avatar: findResult['avatar'],
+    _id: findResult['_id'],
   }
   returnData['token'] = token
   returnData['msg'] = '登录成功'

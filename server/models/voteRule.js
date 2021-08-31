@@ -11,6 +11,8 @@ const ModelSchema = new Schema({
     type: Number,
     default: 1, //限定用户能投票的数量   1-9
   },
+  start_time:Date, //投票开始时间
+  end_time:Date, //投票截止时间
 })
 
 module.exports = mongoose.model('vote-rule', ModelSchema)

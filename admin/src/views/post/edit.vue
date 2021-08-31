@@ -38,6 +38,7 @@ import { savePost, fetchPost } from "../../api/post"
 import router from "../../router"
 import MyEditor from "../../components/MyEditor.vue"
 import {ElMessage} from "element-plus"
+import {useStore} from "vuex";
 export default defineComponent({
   name:'PostEdit',
   components: { MyEditor },
@@ -50,6 +51,7 @@ export default defineComponent({
       category: null,
     })
     let treeData = ref([])
+    const store = useStore()
     let id = router.currentRoute.value.params.id
     //初始化页面
     const initPage = () => {
@@ -75,8 +77,8 @@ export default defineComponent({
       formValue.value.content = e
     }
     const savePostHandle = () => {
+      !formValue.value['author']&&(formValue.value['author']=store.state.user._id)
       savePost(formValue.value).then((res: any) => {
-        console.log(res)
         if (res.code == 200) {
           ElMessage.success("保存成功")
           router.go(-1)

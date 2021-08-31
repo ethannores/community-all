@@ -4,7 +4,7 @@ const { Schema } = mongoose
 const ModelSchema = new Schema({
   title: String,
   author: Schema.Types.ObjectId,
-  category: Schema.Types.ObjectId,
+  category: [Schema.Types.ObjectId],
   content: String,
   created_at: {
     type: Date,

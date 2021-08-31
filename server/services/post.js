@@ -33,7 +33,7 @@ async function list(data) {
   return findResult
 }
 async function save(data) {
-  let { _id, category, title, content, type, vote_source } = data
+  let { _id, category, title, content, type, vote_source,author } = data
   let returnData = {}
   if (_id) {
     //id存在则修改内容
@@ -41,7 +41,7 @@ async function save(data) {
       {
         _id,
       },
-      { category, title, content, type, vote_source }
+      { category, title, content, type, vote_source,author }
     )
     returnData['data'] = findUpdateResult
   } else {
@@ -51,7 +51,7 @@ async function save(data) {
       title,
       content,
       type,
-      vote_source,
+      vote_source,author
     })
     returnData['data'] = saveResult
   }
