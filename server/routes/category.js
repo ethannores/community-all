@@ -7,6 +7,12 @@ Route.get('/list', async (req, res, next) => {
 	let result = await Service.list(data)
 	res.$pageSuccess(result)
 })
+Route.get('/tree', async (req, res, next) => {
+	let data =
+		Object.getOwnPropertyNames(req.body).length > 0 ? req.body : req.query
+	let result = await Service.tree(data)
+	res.send(result)
+})
 Route.post('/save', async (req, res, next) => {
 	let result = await Service.save(req.body)
 	res.send(result)

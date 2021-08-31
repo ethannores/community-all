@@ -5,7 +5,10 @@ import store from './store/index'
 //全局样式
 import './styles/base.scss'
 import http from './util/http'
+import { useElementPlus } from './plugins/element-plus'
 const app = createApp(App)
+app.config.globalProperties.$ELEMENT = { size: 'mini', zIndex: 3000 }
+app.use(useElementPlus)
 app.config.globalProperties.$http = http
 import {
   // create naive ui
@@ -34,7 +37,10 @@ import {
   NText,
   NRadio,
   NModal,
-  NCascader,NTable,NDataTable
+  NCascader,
+  NTable,
+  NDataTable,
+  NDialogProvider,
 } from 'naive-ui'
 
 const naive = create({
@@ -62,7 +68,10 @@ const naive = create({
     NText,
     NRadio,
     NModal,
-    NCascader,NTable,NDataTable
+    NCascader,
+    NTable,
+    NDataTable,
+    NDialogProvider,
   ],
 })
 app.use(naive)
