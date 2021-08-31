@@ -1,17 +1,15 @@
 <template>
   <div>
     <!-- 顶部搜索栏 -->
-    <n-form inline :label-width="80" :model="params" size="small" ref="formRef">
-      <n-form-item label="关键词" path="user.name">
-        <n-input v-model:value="params.keyword" placeholder="输入关键词" />
-      </n-form-item>
-      <n-form-item>
-        <n-space>
-          <n-button @click="searchHandle" attr-type="button">搜索</n-button>
-          <n-button @click="$router.push('/post/edit/0')" type="primary">新建</n-button>
-        </n-space>
-      </n-form-item>
-    </n-form>
+    <el-form inline v-model="params" label-width="80px">
+        <el-form-item label="关键词">
+          <el-input v-model="params.keyword" placeholder="请输入关键词"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="searchHandle">搜索</el-button>
+          <el-button type="primary" @click="$router.push('/post/edit/0')">新增</el-button>
+        </el-form-item>
+    </el-form>
     <!-- 表格主体 -->
     <el-table :data="listData" border style="width: 100%">
       <el-table-column prop="title" label="标题">

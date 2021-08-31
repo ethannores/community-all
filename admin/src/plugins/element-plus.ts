@@ -5,9 +5,29 @@ import {
   ElLoading,
   ElTable,
   ElTableColumn,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElInputNumber,
+  ElRadio,
+  ElRadioButton,
+  ElRadioGroup,
+  ElSelect,
+  ElOption,
+  ElCascader,
+  ElDialog
 } from 'element-plus'
 
-const components = [ElButton, ElTable, ElTableColumn]
+const components = [ElButton, ElTable, ElTableColumn,ElForm,
+  ElFormItem,
+  ElInput,
+  ElInputNumber,
+  ElRadio,
+  ElRadioButton,
+  ElRadioGroup,
+  ElSelect,
+  ElOption,
+  ElCascader,ElDialog]
 
 const plugins = [ElLoading]
 

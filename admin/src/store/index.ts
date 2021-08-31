@@ -1,6 +1,6 @@
 import { createStore, Store } from 'vuex'
 import { ComponentCustomProperties } from 'vue'
-
+import {ElMessage} from 'element-plus'
 import http from '../util/http'
 declare module '@vue/runtime-core' {
   interface State {
@@ -27,13 +27,13 @@ export default createStore({
     login({ commit }, data) {
       http.post('/user/login', data).then((res: any) => {
         if (res.code == 200) {
-          ;(window as any).$message.success(res.msg)
+          ElMessage.success(res.msg)
           commit('LOGIN', res.data);
           localStorage.setItem('expTime',new Date().getTime()+43200000+'')
           localStorage.setItem('token',res.token)
           localStorage.setItem('user',JSON.stringify(res.data))
         } else {
-          ;(window as any).$message.info(res.msg)
+          ElMessage.info(res.msg)
         }
       })
     },

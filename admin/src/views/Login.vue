@@ -1,19 +1,16 @@
 <template>
   <div class="login_page">
     <n-card title="登录" class="login-card">
-      <n-form :model="model" ref="formRef">
-        <n-form-item path="username" label="用户名">
-          <n-input v-model:value="model.username" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="password" label="密码">
-          <n-input v-model:value="model.password" type="password" @keydown.enter.prevent />
-        </n-form-item>
-      </n-form>
-      <n-space>
-        <n-button type="primary" @click="loginHandle()">登录</n-button>
-      </n-space>
+      <el-form :model="model" ref="formRef" label-width="80px">
+        <el-form-item path="username" label="用户名">
+          <el-input v-model="model.username"/>
+        </el-form-item>
+        <el-form-item path="password" label="密码">
+          <el-input v-model="model.password" type="password"/>
+        </el-form-item>
+      </el-form>
+      <el-button type="primary" @click="loginHandle()">登录</el-button>
     </n-card>
-
   </div>
 </template>
 
@@ -28,9 +25,7 @@ export default defineComponent({
       password: "admin.1",
     })
     const store = useStore();
-    console.log(router)
     watch(()=>store.state.user,(newVal,oldVal)=>{
-      console.log(newVal)
       if(newVal.username){
         let path=router.currentRoute.value.query?.redirct?router.currentRoute.value.query.redirct:'/';
         router.push(path as any)

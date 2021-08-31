@@ -1,50 +1,73 @@
 <template>
   <div>
     <!-- 顶部搜索栏 -->
-    <n-form inline :label-width="80" :model="params" size="small" ref="formRef">
-      <n-form-item label="关键词" path="user.name">
-        <n-input v-model:value="params.keyword" placeholder="输入关键词" />
-      </n-form-item>
-      <n-form-item>
-        <n-space>
-          <n-button @click="searchHandle" attr-type="button">搜索</n-button>
-          <n-button @click="showModal=true" type="primary">新建</n-button>
-        </n-space>
-      </n-form-item>
-    </n-form>
-    <!-- 表格主体 -->
-    <n-data-table :single-line="false" size="small" :columns="columns" :data="listData" :pagination="pagination" />
-    <!-- 模块框弹出新增/编辑 -->
-    <n-modal v-model:show="showModal">
-      <n-card style="width: 600px;" title="新增/编辑分类" :bordered="false" size="huge">
-        <template #header-extra> </template>
-        <n-form :label-width="80" :model="editParams" size="small" ref="formRef">
-          <n-form-item label="分类名" path="user.name">
-            <n-input v-model:value="editParams.title" placeholder="输入分类名" />
-          </n-form-item>
-          <n-form-item label="上级分类" path="user.name">
-            <n-cascader v-model:value="editParams.pid" placeholder="选择上级分类，不选则为顶级分类" :expand-trigger="'click'"
-              :options="treeData" :cascade="true" :leaf-only="false" :show-path="true" :filterable="false" />
-          </n-form-item>
-          <n-form-item label="分类描述" path="user.name">
-            <n-input v-model:value="editParams.description" type="textarea" placeholder="输入分类名" />
-          </n-form-item>
-        </n-form>
-        <template #footer>
-          <n-space>
-            <n-button @click="addOrEditSubmit" type="primary">保存</n-button>
-            <n-button @click="showModal=false">取消</n-button>
-          </n-space>
+    <el-form inline v-model="params" label-width="80px">
+        <el-form-item label="关键词">
+          <el-input v-model="params.keyword" placeholder="请输入关键词"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="searchHandle">搜索</el-button>
+          <el-button type="primary" @click="showModal=true">新增</el-button>
+        </el-form-item>
+    </el-form>
+     <!-- 表格主体 -->
+    <el-table :data="listData" border style="width: 100%">
+      <el-table-column prop="title" label="分类名">
+      </el-table-column>
+      <el-table-column prop="pid" label="上级分类">
+        <template #default="scope">
+          {{scope.row.parent[0]?scope.row.parent[0]:'无'}}
         </template>
-      </n-card>
-    </n-modal>
+      </el-table-column>
+      <el-table-column prop="description" label="分类描述">
+        <template #default="scope">
+          {{scope.row.description?scope.row.description:'无'}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="address" label="操作">
+        <template #default="scope">
+          <el-button @click="openEditHandle(scope.row)" type="primary" size="mini">编辑</el-button>
+          <!-- <el-button v-if="scope.row.type==2" type="primary" size="mini">投票设置</el-button>
+          <el-button @click="delPostHandle(scope.row)" type="danger" size="mini">删除</el-button> -->
+        </template>
+      </el-table-column>
+    </el-table>
+  <!-- 新增和编辑弹框 -->
+    <el-dialog
+      title="新增/编辑分类"
+      v-model="showModal"
+      width="400px">
+      <el-form v-model="editParams" label-width="80px">
+        <el-form-item label="分类名">
+          <el-input v-model="editParams.title" placeholder="请输入分类名"></el-input>
+        </el-form-item>
+        <el-form-item label="上级分类">
+          <el-cascader
+          :options="treeData"
+          v-model="editParams.pid"
+          :props="{ checkStrictly: true,label:'title',value:'_id'}"
+          filterable
+          placeholder="不选则为顶级分类"
+          clearable>
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="分类描述">
+          <el-input type="textarea" v-model="editParams.description" placeholder="请输入分类名"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="showModal = false">取 消</el-button>
+          <el-button type="primary" @click="addOrEditSubmit">保 存</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch, h } from "vue"
 import { isEmpty } from "lodash"
-import { NButton } from "naive-ui"
 import {
   fetchList,
   fetchTree,
@@ -54,9 +77,6 @@ export default defineComponent({
   setup() {
     let showModal = ref(false)
     let listData = ref([])
-    let pagination = ref({
-      pageSize: 10,
-    })
     let params = ref({
       keyword: "",
       page: 1,
@@ -68,40 +88,6 @@ export default defineComponent({
       description: "",
       _id: "",
     })
-    const columns = [
-      { title: "title", key: "title" },
-      {
-        title: "父分类",
-        key: "pid",
-        render(row: any) {
-          let str = row.pid ? row.pid : "无"
-          return str
-        },
-      },
-      {
-        title: "description",
-        key: "description",
-        render(row: any) {
-          let str = row.description ? row.description : "无"
-          return str
-        },
-      },
-      {
-        title: "操作",
-        key: "操作",
-        render(row: any) {
-          return h(
-            NButton,
-            {
-              size: "small",
-              type: "primary",
-              onClick: () => openEditHandle(row),
-            },
-            { default: () => "编辑" }
-          )
-        },
-      },
-    ]
     let treeData = ref([])
     //获取列表数据
     const getList = () => {
@@ -144,7 +130,10 @@ export default defineComponent({
       }
     )
 
-    let searchHandle = () => {}
+    let searchHandle = () => {
+      params.value.page=1;
+      getList()
+    }
     //点击用户提交
     let addOrEditSubmit = () => {
       console.log(editParams.value)
@@ -169,8 +158,7 @@ export default defineComponent({
       })
     }
     return {
-      columns,
-      pagination,
+      openEditHandle,
       listData,
       treeData,
       showModal,

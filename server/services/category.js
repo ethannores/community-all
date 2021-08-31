@@ -10,8 +10,6 @@ function getTreeByData(data) {
   for (let i = 0; i < tempData.length; i++) {
     let id = tempData[i]['_id']
     map[id] = tempData[i]
-    tempData[i]['value'] = id
-    tempData[i]['label'] = tempData[i]['title']
     tempData[i]['children'] = []
     if (tempData[i].pid && map[tempData[i].pid]) {
       map[tempData[i].pid]['children'].push(tempData[i])
@@ -22,33 +20,6 @@ function getTreeByData(data) {
   }
   return tree
 }
-
-// let arr = [
-//   { id: 1, name: '1', pid: 0 },
-//   { id: 2, name: '2', pid: 0 },
-//   { id: 3, name: '3', pid: 1 },
-//   { id: 4, name: '4', pid: 1 },
-//   { id: 5, name: '5', pid: 3 },
-// ]
-
-// return [
-//   {
-//     id: 1,
-//     name: '1',
-//     pid: 0,
-//     children: [
-//       {
-//         id: 3,
-//         name: '3',
-//         pid: 1,
-//         children: [{ id: 5, name: '5', pid: 3 }],
-//       },
-//       { id: 4, name: '4', pid: 1 },
-//     ],
-//   },
-//   { id: 2, name: '2', pid: 0 },
-// ]
-
 //获取列表
 async function list(data) {
   let page = +data.page || 1
@@ -61,11 +32,37 @@ async function list(data) {
     },
   ]
   //筛选
-  let match = []
+  let match = [];
+  data.keyword&&match.push({
+    $match:{
+      title:{
+        $regex:new RegExp(data.keyword,'g')
+      }
+    }
+  })
   //关联表
-  let lookup = []
+  let lookup = [
+    {
+      $lookup:{
+        from:'categories',
+        localField:'pid',
+        foreignField:'_id',
+        as:'parent'
+      }
+    }
+  ]
   //返回体表字段筛选
-  let project = []
+  let project = [
+    {
+      $project:{
+        _id:1,
+        title:1,
+        pid:1,
+        description:1,
+        parent:'$parent.title'
+      }
+    }
+  ]
   //过滤
   let findResult = await Model.aggregate([
     {
@@ -76,7 +73,7 @@ async function list(data) {
             $count: 'count',
           },
         ],
-        data: [...pageArr, ...match, ...lookup, ...project],
+        data: [...match,...pageArr,...lookup, ...project],
       },
     },
   ])
