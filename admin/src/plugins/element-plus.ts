@@ -15,7 +15,16 @@ import {
   ElSelect,
   ElOption,
   ElCascader,
-  ElDialog
+  ElDialog,
+  ElCard,
+  ElContainer,
+  ElHeader,
+  ElMain,
+  ElMenu,
+  ElMenuItem,
+  ElMenuItemGroup,
+  ElDatePicker,ElIcon
+  
 } from 'element-plus'
 
 const components = [ElButton, ElTable, ElTableColumn,ElForm,
@@ -27,7 +36,12 @@ const components = [ElButton, ElTable, ElTableColumn,ElForm,
   ElRadioGroup,
   ElSelect,
   ElOption,
-  ElCascader,ElDialog]
+  ElCascader,ElDialog,ElCard,ElContainer,
+  ElHeader,
+  ElMain,
+  ElMenu,
+  ElMenuItem,
+  ElMenuItemGroup,ElDatePicker,ElIcon]
 
 const plugins = [ElLoading]
 

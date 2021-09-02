@@ -1,15 +1,15 @@
 <template>
   <div>
-    <n-layout>
-      <n-layout-header inverted bordered>
+    <el-container>
+      <el-header height="40px">
         <top-nav></top-nav>
-      </n-layout-header>
-      <n-layout-content class="main_content">
-        <n-card class="main_card">
+      </el-header>
+      <el-main style="padding:10px;background-color:#f8f8f8;">
+        <el-card body-style="padding:10px">
           <router-view></router-view>
-        </n-card>
-      </n-layout-content>
-    </n-layout>
+        </el-card>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -28,13 +28,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.main_content{
-  background-color: #f8f8f8;
-  height: calc(100vh - 50px);
-  padding: 10px;
-  .n-card__content{
-    padding: 10px;
-    padding-top: 5px;
-  }
+.el-header{
+  background-color: #456781;
 }
 </style>

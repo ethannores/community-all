@@ -28,6 +28,7 @@
 
     <!-- 提交区域 -->
     <el-button type="primary" @click="savePostHandle">提交</el-button>
+    
   </div>
 </template>
 
@@ -39,6 +40,7 @@ import router from "../../router"
 import MyEditor from "../../components/MyEditor.vue"
 import {ElMessage} from "element-plus"
 import {useStore} from "vuex";
+
 export default defineComponent({
   name:'PostEdit',
   components: { MyEditor },
@@ -52,7 +54,8 @@ export default defineComponent({
     })
     let treeData = ref([])
     const store = useStore()
-    let id = router.currentRoute.value.params.id
+    let id = router.currentRoute.value.params.id;
+    let voteShow = ref(false)
     //初始化页面
     const initPage = () => {
       //如果id存在的话，则通过接口获取页面数据
@@ -90,6 +93,7 @@ export default defineComponent({
       treeData,
       savePostHandle,
       changeContent,
+      voteShow
     }
   },
 })

@@ -14,16 +14,18 @@ export default defineConfig({
       // useSource: true
     }),
   ],
-
   server: {
     port: 3333,
     open: true,
     proxy: {
       '^/api': {
         // target: 'http://192.168.2.108:3456',
-        target: 'http://192.168.2.234:3456',
+        target: 'http://localhost:3456',
         changeOrigin: true,
-        rewrite: path => path.replace('/api', ''),
+        rewrite: path =>{
+          console.log(path);
+          return path.replace('/api', '')
+        },
       },
     },
   },

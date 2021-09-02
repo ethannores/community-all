@@ -1,6 +1,11 @@
 <template>
   <div class="login_page">
-    <n-card title="登录" class="login-card">
+    <el-card class="login-card">
+      <template #header>
+        <div class="card-header">
+          <span>登录</span>
+        </div>
+      </template>
       <el-form :model="model" ref="formRef" label-width="80px">
         <el-form-item path="username" label="用户名">
           <el-input v-model="model.username"/>
@@ -10,7 +15,7 @@
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="loginHandle()">登录</el-button>
-    </n-card>
+    </el-card>
   </div>
 </template>
 

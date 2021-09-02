@@ -13,7 +13,16 @@ async function list(data) {
   //筛选
   let match = []
   //关联表
-  let lookup = []
+  let lookup = [
+    {
+      $lookup:{
+        from:'categories',
+        localField:'category',
+        foreignField:'_id',
+        as:'categories'
+      }
+    }
+  ]
   //返回体表字段筛选
   let project = []
   //过滤
@@ -26,7 +35,7 @@ async function list(data) {
             $count: 'count',
           },
         ],
-        data: [...pageArr, ...match, ...lookup, ...project],
+        data: [...match,...pageArr,  ...lookup, ...project],
       },
     },
   ])

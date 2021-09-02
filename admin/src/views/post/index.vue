@@ -19,6 +19,13 @@
           <div v-html="scope.row.content"></div>
         </template>
       </el-table-column>
+      <el-table-column label="所属分类">
+        <template #default="scope">
+          <div>
+            {{scope.row.categories.map(e=>e.title).join(' / ')}}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="帖子类型">
         <template #default="scope">
           <div>
@@ -29,11 +36,13 @@
       <el-table-column prop="address" label="操作">
         <template #default="scope">
           <el-button @click="$router.push(`/post/edit/${scope.row._id}`)" type="primary" size="mini">编辑</el-button>
-          <el-button v-if="scope.row.type==2" type="primary" size="mini">投票设置</el-button>
+          <el-button v-if="scope.row.type==2" @click="voteSetHandle(scope.row)" type="primary" size="mini">投票设置</el-button>
           <el-button @click="delPostHandle(scope.row)" type="danger" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 投票管理弹框区域 -->
+    <vote-dialog :voteShow="voteShow" :currData="currVoteData" @close="voteSetCloseHandle"></vote-dialog>
   </div>
 </template>
 
@@ -43,7 +52,9 @@ import { fetchList } from "../../api/post"
 import { isEmpty } from "lodash"
 import router from "../../router"
 import { ElMessageBox, ElMessage } from "element-plus"
+import VoteDialog from './components/vote.vue'
 export default defineComponent({
+  components:{VoteDialog},
   setup() {
     let params = ref({
       page: 1,
@@ -54,6 +65,18 @@ export default defineComponent({
       limit: 20,
     })
     let listData = ref([])
+    let voteShow = ref(true)
+    let currVoteData=ref({})
+    //投票贴设置
+    const voteSetHandle = (data:any)=>{
+      currVoteData.value=data;
+      voteShow.value=true;
+    }
+    //关闭投票贴设置
+    const voteSetCloseHandle = ()=>{
+      currVoteData.value={};
+      voteShow.value=false;
+    }
     //帖子删除事件
     const delPostHandle = (data: any): void => {
       ElMessageBox.confirm(`确认删除帖子：${data.title}`, {
@@ -85,9 +108,13 @@ export default defineComponent({
     }
     return {
       params,
+      voteShow,
+      currVoteData,
       searchHandle,
+      voteSetHandle,
       listData,
       delPostHandle,
+      voteSetCloseHandle
     }
   },
 })
