@@ -21,6 +21,20 @@ export function savePost(data: any) {
     data,
   })
 }
+export function saveVoteRule(data: any) {
+  return request({
+    url: '/post/vote/save',
+    method: 'post',
+    data,
+  })
+}
+export function fetchVoteRule(_id: string) {
+  return request({
+    url: '/post/vote/detail',
+    method: 'get',
+    params: { _id },
+  })
+}
 export function delPost(_id: string) {
   return request({
     url: '/post/del',

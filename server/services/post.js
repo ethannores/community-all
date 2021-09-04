@@ -1,4 +1,6 @@
 const Model = require('../models/post')
+const VoteModel = require('../models/vote')
+const VoteRuleModel = require('../models/voteRule')
 const mongoose = require('mongoose')
 async function list(data) {
   let page = +data.page || 1
@@ -15,13 +17,13 @@ async function list(data) {
   //关联表
   let lookup = [
     {
-      $lookup:{
-        from:'categories',
-        localField:'category',
-        foreignField:'_id',
-        as:'categories'
-      }
-    }
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        as: 'categories',
+      },
+    },
   ]
   //返回体表字段筛选
   let project = []
@@ -35,14 +37,15 @@ async function list(data) {
             $count: 'count',
           },
         ],
-        data: [...match,...pageArr,  ...lookup, ...project],
+        data: [...match, ...pageArr, ...lookup, ...project],
       },
     },
   ])
   return findResult
 }
 async function save(data) {
-  let { _id, category, title, content, type, vote_source,author } = data
+  let { _id, category, title, content, type, vote_source, author } =
+    data
   let returnData = {}
   if (_id) {
     //id存在则修改内容
@@ -50,7 +53,7 @@ async function save(data) {
       {
         _id,
       },
-      { category, title, content, type, vote_source,author }
+      { category, title, content, type, vote_source, author }
     )
     returnData['data'] = findUpdateResult
   } else {
@@ -60,7 +63,8 @@ async function save(data) {
       title,
       content,
       type,
-      vote_source,author
+      vote_source,
+      author,
     })
     returnData['data'] = saveResult
   }
@@ -85,10 +89,13 @@ async function del(data) {
     data: result,
   }
 }
-
+async function voteDetail(data) {
+  let { _id } = data
+}
 module.exports = {
   list,
   save,
   detail,
   del,
+  voteDetail,
 }
