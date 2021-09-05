@@ -1,0 +1,13 @@
+module.exports={
+  devServer:{
+    port:'3344',
+    open:true,
+    proxy:{
+      '^/api':{
+        target:'http://localhost:3456',
+        changeOrigin:true,
+        rewrite:path=>path.replace('/api','')
+      }
+    }
+  }
+}

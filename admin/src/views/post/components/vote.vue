@@ -3,9 +3,9 @@
     <el-dialog width="80%" title="投票管理" v-model="voteShow" @close="$emit('close')" :close-on-click-modal="false"
       :close-on-press-escape="false">
       <el-form :inline="true" label-width="80px">
-        <el-form-item label="投票来源">
-          <el-radio v-model="voteSetData.source" :label="1">系统上传</el-radio>
-          <el-radio v-model="voteSetData.source" :label="2">用户上传</el-radio>
+        <el-form-item label="用户提供">
+          <el-radio v-model="voteSetData.user_upload" :label="1">禁止</el-radio>
+          <el-radio v-model="voteSetData.user_upload" :label="2">允许</el-radio>
         </el-form-item>
         <el-form-item label="每人几票">
           <el-input type="number" v-model="voteSetData.limit" min="1" step="1"></el-input>
@@ -19,11 +19,11 @@
           <el-button type="text" @click="addDetailHandle">添加投票条目</el-button>
         </el-form-item>
       </el-form>
-      <el-table :data="voteSetData.vote_detail" border>
+      <el-table :data="voteSetData.items" border>
         <el-table-column label="上传用户">
           <template #default="scope">
             <div>
-              {{scope.row.user}}({{scope.row.user_id}})
+              {{scope.row.user}}({{scope.row.provider}})
             </div>
           </template>
         </el-table-column>
@@ -50,10 +50,10 @@
         <el-table-column label="状态">
           <template #default="scope">
             <el-select v-model="scope.row.status">
-              <el-option label="允许投票" value="1"></el-option>
-              <el-option label="禁止投票" value="2"></el-option>
-              <el-option label="投票不可见" value="3"></el-option>
-              <el-option label="待审核" value="4"></el-option>
+              <el-option label="允许投票" :value="1"></el-option>
+              <el-option label="禁止投票" :value="2"></el-option>
+              <el-option label="投票不可见" :value="3"></el-option>
+              <el-option label="待审核" :value="4"></el-option>
             </el-select>
           </template>
         </el-table-column>
@@ -74,10 +74,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, ref, watch } from "vue"
 import { useStore } from "vuex"
 import { Edit } from "@element-plus/icons"
 import { saveVoteRule, fetchVoteRule } from "@/api/post"
+import { ElMessage } from "element-plus"
 export default defineComponent({
   components: {
     Edit,
@@ -94,32 +95,50 @@ export default defineComponent({
   },
   setup(props) {
     let voteSetData = ref({
-      source: 1,
-      time: "",
+      user_upload: 1,
+      time: [],
       limit: 1,
-      vote_detail: [],
+      items: [],
+      post_id:''
     })
     const store = useStore()
     //点击添加投票条目
     const addDetailHandle = () => {
-      voteSetData.value.vote_detail.push({
+      voteSetData.value.items.push({
         user: store.state.user.username,
-        user_id: store.state.user._id,
+        provider: store.state.user._id,
         img: "",
         description: "",
         vote_number: 0,
-        status: "1",
+        status: 1,
+        post_id:props.currData._id
       } as never)
     }
+    //请求获取投票条目信息
     //获取帖子相关规则信息
     const getVoteRule = () => {
-      fetchVoteRule(props.currData._id).then(res => {
-        console.log(res)
+      fetchVoteRule({post_id:props.currData._id}).then(res => {
+        voteSetData.value['user_upload']=res.data.user_upload;
+        voteSetData.value['limit']=res.data.limit;
+        voteSetData.value['post_id']=res.data.post_id;
+        voteSetData.value['time']=[res.data.start_time,res.data.end_time];
+        voteSetData.value['items']=res.items
       })
     }
+    watch(()=>props.voteShow,(newVal)=>{
+      if(newVal){
+        getVoteRule()
+      }
+    })
+    
     //保存规则
     const saveHandle = () => {
+      if(!props.currData._id){
+        ElMessage.error('未选择需要设置投票规则投票贴！');
+        return
+      }
       console.log(voteSetData.value)
+      voteSetData.value.post_id = props.currData._id
       saveVoteRule(voteSetData.value).then(res => {
         console.log(res)
       })

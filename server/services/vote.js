@@ -1,5 +1,6 @@
 const Model = require('../models/vote')
-
+const VoteRuleModel = require('../models/voteRule')
+const mongoose = require('mongoose')
 async function list(data) {
 	let page = +data.page || 1
 	let limit = +data.limit || 20
@@ -38,33 +39,77 @@ async function list(data) {
 	return findResult
 }
 async function save(data) {
-  let {_id}=data;
-  let returnData={};
-  if(_id){
-    //id存在则修改内容
-    let findUpdateResult = await Model.findByIdAndUpdate({
-      _id
-    },{
-
+  let {_id,post_id,limit,time,user_upload,items}=data;
+  let returnData={};  
+  let [start_time,end_time]=time;
+  //id存在则修改内容
+  let findUpdateResult = await VoteRuleModel.findOneAndUpdate({
+    post_id:post_id
+  },{
+    limit,user_upload,start_time,end_time
+  },{
+    upsert:true,
+    new:true,
+    setDefaultsOnInsert:true
+    
+  })
+  if(items.length>0){
+    items.forEach(async e=>{
+      let data={
+        imgs:e.imgs,
+        description:e.description,
+        provider:e.provider,
+        status:+e.status
+      }
+      if(e._id){
+        await Model.findById(e._id,data)
+      }else{
+        data['post_id']=e.post_id;
+        await Model.create(data)
+      }
     })
-    returnData['data']=findUpdateResult
-  }else{
-    //新增内容
-    let saveResult = await Model.create({
-
-    })
-    returnData['data']=saveResult
   }
   returnData['code']=200
   returnData['msg']='保存成功'
+  returnData['data']=findUpdateResult
   return returnData
 }
 async function detail(data) {
-	let { id } = data
-	let result = await Model.findById(id)
+	let { post_id } = data
+  //获取投票规则
+	let result = await VoteRuleModel.findOne({
+    post_id:mongoose.Types.ObjectId(post_id)
+  })
+  //获取已存在的投票条目
+  let voteItems = await Model.aggregate([
+    {$match:{post_id:mongoose.Types.ObjectId(post_id)}},
+    {$lookup:{
+      from:'users',
+      localField:'provider',
+      foreignField:'_id',
+      as:'user'
+    }},
+    {$unwind:'$user'}
+  ])
+  console.log(voteItems)
+  let tempData=[];
+  if(voteItems.length>0){
+    voteItems.forEach(e=>{
+      tempData.push({
+        description:e.description,
+        provider:e.provider,
+        status:e.status,
+        _id:e._id,
+        vote_number:e.vote_users.length,
+        user:e.user.username,
+      })
+    })
+  }
+
 	return {
 		code: 200,
 		data: result,
+    items:tempData
 	}
 }
 async function del(data) {

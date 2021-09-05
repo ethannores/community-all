@@ -1,6 +1,4 @@
 const Model = require('../models/post')
-const VoteModel = require('../models/vote')
-const VoteRuleModel = require('../models/voteRule')
 const mongoose = require('mongoose')
 async function list(data) {
   let page = +data.page || 1
@@ -89,13 +87,9 @@ async function del(data) {
     data: result,
   }
 }
-async function voteDetail(data) {
-  let { _id } = data
-}
 module.exports = {
   list,
   save,
   detail,
   del,
-  voteDetail,
 }

@@ -23,16 +23,16 @@ export function savePost(data: any) {
 }
 export function saveVoteRule(data: any) {
   return request({
-    url: '/post/vote/save',
+    url: '/vote/save',
     method: 'post',
     data,
   })
 }
-export function fetchVoteRule(_id: string) {
+export function fetchVoteRule(params:object) {
   return request({
-    url: '/post/vote/detail',
+    url: '/vote/detail',
     method: 'get',
-    params: { _id },
+    params
   })
 }
 export function delPost(_id: string) {

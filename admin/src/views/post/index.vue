@@ -63,9 +63,9 @@ export default defineComponent({
     })
     let pagination = ref({
       limit: 20,
-    })
+    })  
     let listData = ref([])
-    let voteShow = ref(true)
+    let voteShow = ref(false)
     let currVoteData=ref({})
     //投票贴设置
     const voteSetHandle = (data:any)=>{

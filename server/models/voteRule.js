@@ -3,9 +3,9 @@ const { Schema } = mongoose
 
 const ModelSchema = new Schema({
   post_id: Schema.Types.ObjectId,
-  source: {
+  user_upload: {
     type: Number,
-    default: 1, //投票类型，1 系统上传投票  2 用户上传内容
+    default: 1, //投票类型，1 禁止  2  允许
   },
   limit: {
     type: Number,
