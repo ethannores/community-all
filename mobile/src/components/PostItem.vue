@@ -12,10 +12,14 @@
       </div>
       <div class="center" @click="goDetail(item._id)">
         <div class="title">{{item.title}}</div>
-        <div class="category">{{item.category.map(e=>e.title).join(' / ')}}</div>
+        <div class="category">
+          <span>{{item.category.map(e=>e.title).join(' / ')}}</span>
+          <!-- <span>投票贴</span> -->
+          <span v-if="item.type==3">投票贴</span>
+        </div>
       </div>
       <div class="down">
-        
+
       </div>
     </div>
   </div>
@@ -77,6 +81,9 @@ export default {
       }
       .category {
         color: #999;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     }
   }
