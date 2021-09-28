@@ -44,7 +44,6 @@
     methods: {
       getList(){
         fetchCommentList(this.params).then(res=>{
-          console.log(111,res);
           this.list=[...this.list,...res.data]
         })
       }
@@ -63,7 +62,7 @@
     width: 100%;
     padding: 10px;
     border-bottom: 1px solid rgba(0,0,0,.1);
-    font-size: 16px;
+    font-size: 24px;
     
     span{
       margin-right: 30px;
@@ -74,16 +73,8 @@
         position: relative;
         &.active{
           color:#1989fa;
-          &::after{
-            content:'';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            width: 20px;
-            height: 4px;
-            transform: translateX(-50%);
-            background-color: #1989fa;
-          }
+          // font-weight: 600;  
+          font-size: 28px;
         }
       }
     }

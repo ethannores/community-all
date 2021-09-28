@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column label="所属分类">
         <template #default="scope">
-          <div>
+          <div v-if="scope.row.categories">
             {{scope.row.categories.map(e=>e.title).join(' / ')}}
           </div>
         </template>

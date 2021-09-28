@@ -17,7 +17,23 @@ export function fetchDetail(data){
   })
 }
 
-//点赞/收藏帖子
+//投票
+export function voteStore(data){
+  return request({
+    url:'/vote/store',
+    method:'post',
+    data
+  })
+}
+//获取当前用户针对该投票贴投票的情况
+export function voteResult(data){
+  return request({
+    url:'/vote/vote_result',
+    method:'get',
+    params:data,
+  })
+}
+//点赞帖子
 export function likePost(data){
   return request({
     url:'/post/like',
@@ -25,7 +41,7 @@ export function likePost(data){
     data
   })
 }
-//点赞/收藏帖子
+//收藏帖子
 export function collectionPost(data){
   return request({
     url:'/post/collection',

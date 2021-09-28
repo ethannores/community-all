@@ -1,5 +1,6 @@
 const Model = require('../models/post')
 const mongoose = require('mongoose')
+const VoteService = require('./vote')
 async function list(data) {
   let page = +data.page || 1
   let limit = +data.limit || 2
@@ -69,6 +70,9 @@ async function detail(data) {
       data._id,
       data.user
     )
+  }
+  if(result._doc['type']==2){
+    result._doc['votes'] = await VoteService.detail({post_id:_id})
   }
 
   return {
@@ -159,7 +163,6 @@ async function getUserLikeStatus(post_id, user) {
       },
     },
   })
-  console.log(likeStatus)
   return likeStatus ? true : false
 }
 module.exports = {

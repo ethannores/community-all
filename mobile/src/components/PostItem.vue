@@ -15,7 +15,7 @@
         <div class="category">
           <span>{{item.category.map(e=>e.title).join(' / ')}}</span>
           <!-- <span>投票贴</span> -->
-          <span v-if="item.type==3">投票贴</span>
+          <span v-if="item.type==2">投票贴</span>
         </div>
       </div>
       <div class="down">
@@ -69,12 +69,12 @@ export default {
         }
       }
       .right{
-        font-size: 12px;
+        font-size: 24px;
         color: #999;
       }
     }
     .center {
-      font-size: 14px;
+      font-size: 24px;
       .title {
         font-size: 26px;
         margin: 6px 0;

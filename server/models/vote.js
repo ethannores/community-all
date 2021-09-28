@@ -12,7 +12,10 @@ const ModelSchema = new Schema({
 		default:1,// 该条投票状态 正常状态/审核通过（可以投票状态）  2  未审核  3审核未通过  4 投票异常暂停投票
 	},
 	vote_users:[{
-		vote_at:Date,
+		vote_at:{
+			type: Date,
+    	default: new Date(),
+		},
 		user:Schema.Types.ObjectId
 	}],
 })

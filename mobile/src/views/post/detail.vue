@@ -11,7 +11,7 @@
           <van-image width="1.75rem" round height="1.75rem" fit="cover" :src="detailData.author.avatar" />
           <span>{{detailData.author.username}}</span>
         </div>
-        <div class="right">
+        <div class="right" v-if="detailData.author._id!=$store.state.user_info._id">
           <van-button type="primary" size="mini">关注</van-button>
         </div>
       </div>
@@ -21,6 +21,7 @@
           {{detailData.category.map(e=>e.title).join(' / ')}}</span>
         <h2 class="title">{{detailData.title}} </h2>
         <div class="content" v-html="detailData.content"></div>
+        <vote-area v-if="detailData.votes" :vote="detailData.votes" :post_id="id"></vote-area>
       </div>
     </div>
     <!-- 评论容器 -->
@@ -36,6 +37,7 @@
         <van-icon :name="detailData.isLike?'good-job':'good-job-o'" />
         <span>{{detailData.likes.length}}</span>
       </div>
+      
     </div>
     <!-- 评论帖子 -->
     <van-popup v-model="comment_reply" position="bottom" get-container="body"><post-comment :post_id="id"></post-comment></van-popup>
@@ -48,9 +50,10 @@ import { fetchDetail,likePost,collectionPost } from "../../api/post"
 import NavBar from "../../components/NavBar.vue"
 import PostComment from './components/post-comment.vue'
 import CommentArea from './components/comment-area.vue'
+import VoteArea from './components/vote.vue'
 export default {
   components: {
-    NavBar,PostComment,CommentArea
+    NavBar,PostComment,CommentArea,VoteArea
   },
   data() {
     return {
@@ -68,7 +71,16 @@ export default {
   methods: {
     //点赞
     likeHandle(){
-      if(!this.$store.state.user_info._id)return;
+      if(!this.$store.state.user_info._id){
+        this.$toast('请先登录');
+        this.$router.push({
+          path:'/login',
+          query:{
+            redirect:this.$route.path
+          }
+        })
+        return
+      };
       likePost({_id:this.id,user:this.$store.state.user_info._id}).then(res=>{
         this.detailData.isLike=res.data;
         if(res.data){
@@ -80,7 +92,16 @@ export default {
     },
     //收藏
     collectionHandle(){
-      if(!this.$store.state.user_info._id)return;
+      if(!this.$store.state.user_info._id){
+        this.$toast('请先登录');
+        this.$router.push({
+          path:'/login',
+          query:{
+            redirect:this.$route.path
+          }
+        })
+        return
+      };
       collectionPost({_id:this.id,user:this.$store.state.user_info._id}).then(res=>{
         this.detailData.isCollection=res.data
         if(res.data){
@@ -117,7 +138,7 @@ export default {
       margin-top: 10px;
     }
     .category {
-      font-size: 14px;
+      font-size: 24px;
       color: #999;
     }
   }

@@ -38,6 +38,59 @@ async function list(data) {
   ]);
 	return findResult
 }
+//查看当前用户已经对该贴的哪些投过票了
+async function getUserVoteToPost(post_id,user){
+  let findResult = await Model.find({
+    post_id:mongoose.Types.ObjectId(post_id),
+    vote_users:{
+      $elemMatch:{
+        user:mongoose.Types.ObjectId(user)
+      }
+    }
+  })
+  let resultArr=[]
+  if(findResult.length>0){
+    findResult.forEach(e=>{
+      resultArr.push(e._id)
+    })
+  }
+  return resultArr
+}
+//投票
+async function store(data) {
+  let {_id,user}=data;
+  //先判断是否已经投过票
+  let findResult = await Model.findOne({
+    _id:mongoose.Types.ObjectId(_id),
+    vote_users:{
+      $elemMatch:{
+        user:mongoose.Types.ObjectId(user)
+      }
+    }
+  })
+  if(!findResult){
+    let saveResult = await Model.findOneAndUpdate({
+      _id:mongoose.Types.ObjectId(_id)
+    },{
+      $push:{
+        vote_users:{
+          user
+        }
+      }
+    })
+    let data=await getUserVoteToPost(saveResult.post_id,user)
+    return {
+      code:200,
+      msg:'投票成功',
+      data:data
+    }
+  }
+  return {
+    code:400,
+    msg:'不能重复投票'
+  }
+  
+}
 async function save(data) {
   let {_id,post_id,limit,time,user_upload,items}=data;
   let returnData={};  
@@ -62,7 +115,7 @@ async function save(data) {
         status:+e.status
       }
       if(e._id){
-        await Model.findById(e._id,data)
+        await Model.findByIdAndUpdate(e._id,data)
       }else{
         data['post_id']=e.post_id;
         await Model.create(data)
@@ -91,7 +144,6 @@ async function detail(data) {
     }},
     {$unwind:'$user'}
   ])
-  console.log(voteItems)
   let tempData=[];
   if(voteItems.length>0){
     voteItems.forEach(e=>{
@@ -100,6 +152,7 @@ async function detail(data) {
         provider:e.provider,
         status:e.status,
         _id:e._id,
+        vote_users:e.vote_users.map(e=>e.user),
         vote_number:e.vote_users.length,
         user:e.user.username,
       })
@@ -127,4 +180,6 @@ module.exports = {
 	save,
 	detail,
 	del,
+  store,
+  getUserVoteToPost
 }
