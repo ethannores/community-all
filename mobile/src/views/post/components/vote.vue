@@ -1,5 +1,10 @@
 <template>
 <div class="vote-main">
+  <div class="vote-upload" v-if="vote.data.user_upload==2">
+    <h3>用户上传</h3>
+    <p>该贴允许用户提供投票项目</p>
+    <van-button type="info" size="mini">上传</van-button>
+  </div>
   <div class="vote-rule" v-if="vote.data">
     <h3>投票规则</h3>
     <span class="limit">限定：一项一票，每人总共最多投 <b style="font-size:16px">{{vote.data.limit}}</b>  票，投票后不能变更与取消</span>
@@ -46,6 +51,8 @@ export default {
     this.getVoteResult()
   },
   methods: {
+    //用户上传投票条目
+    uploadVote(){},
     //获取当前用户针对该投票贴投票的相关结果
     getVoteResult(){
       if(!this.$store.state.user_info._id){
@@ -80,6 +87,12 @@ export default {
 .vote-main{
   margin-top: 50px;
   font-size: 24px;
+  .vote-upload{
+    margin-bottom: 20px;
+    p{
+      margin: 5px 0;
+    }
+  }
   .vote-rule{
     display: flex;
     flex-flow: column nowrap;
