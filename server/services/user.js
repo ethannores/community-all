@@ -36,17 +36,28 @@ async function list(data) {
 async function save(data) {
   console.log(data.username, data.password)
   const { username, password } = data
-  //新增内容
-  let saveResult = await Model.create({
+  let findResult = await Model.findOne({
     username,
-    password,
   })
-  let returnData = {}
-  returnData['data'] = saveResult
-  returnData['code'] = 200
-  returnData['msg'] = '保存成功'
-  return returnData
+  if (findResult) {
+    return {
+      code: 400,
+      msg: '用户名已存在，请更换用户名后重试',
+    }
+  } else {
+    //新建用户
+    let saveResult = await Model.create({
+      username,
+      password,
+    })
+    let returnData = {}
+    returnData['data'] = saveResult
+    returnData['code'] = 200
+    returnData['msg'] = '保存成功'
+    return returnData
+  }
 }
+
 //用户登录
 async function login(data) {
   const { username, password } = data

@@ -13,6 +13,14 @@ Route.post('/save', async (req, res, next) => {
   let result = await Service.save(req.body)
   res.send(result)
 })
+Route.post('/like', async (req, res, next) => {
+  let result = await Service.like(req.body)
+  res.send(result)
+})
+Route.post('/collection', async (req, res, next) => {
+  let result = await Service.collection(req.body)
+  res.send(result)
+})
 Route.get('/detail', async (req, res, next) => {
   let data =
     Object.getOwnPropertyNames(req.body).length > 0

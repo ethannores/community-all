@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../router/index'
+import {Toast} from 'vant'
 let http = axios.create({
   timeout:5000,
   baseURL:'/api',
@@ -19,6 +20,9 @@ http.interceptors.request.use((config)=>{
 //请求回复拦截器
 http.interceptors.response.use(res=>{
   if(res.status){
+    if(res.data.msg){
+      Toast(res.data.msg)
+    }
     return res.data
   }
 },err=>{

@@ -2,44 +2,26 @@ const Model = require('../models/post')
 const mongoose = require('mongoose')
 async function list(data) {
   let page = +data.page || 1
-  let limit = +data.limit || 20
-  // 分页
-  let pageArr = [
-    { $skip: (page - 1) * limit },
-    {
-      $limit: limit,
-    },
-  ]
-  //筛选
-  let match = []
-  //关联表
-  let lookup = [
-    {
-      $lookup: {
-        from: 'categories',
-        localField: 'category',
-        foreignField: '_id',
-        as: 'categories',
-      },
-    },
-  ]
-  //返回体表字段筛选
-  let project = []
-  //过滤
-  let findResult = await Model.aggregate([
-    {
-      $facet: {
-        count: [
-          ...match,
-          {
-            $count: 'count',
-          },
-        ],
-        data: [...match, ...pageArr, ...lookup, ...project],
-      },
-    },
-  ])
-  return findResult
+  let limit = +data.limit || 2
+  //定义查询条件
+  let where = {}
+  let findResult = await Model.find(where)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .populate({
+      path: 'author',
+      select: { username: 1, avatar: 1 },
+    })
+    .populate({
+      path: 'category',
+      select: { title: 1 },
+    })
+  let count = await Model.countDocuments(where)
+
+  return {
+    data: findResult,
+    count,
+  }
 }
 async function save(data) {
   let { _id, category, title, content, type, vote_source, author } =
@@ -73,6 +55,22 @@ async function save(data) {
 async function detail(data) {
   let { _id } = data
   let result = await Model.findById(mongoose.Types.ObjectId(_id))
+    .populate({
+      path: 'author',
+      select: { username: 1, avatar: 1 },
+    })
+    .populate({
+      path: 'category',
+      select: { title: 1 },
+    })
+  if (data.user) {
+    result._doc['isLike'] = await getUserLikeStatus(data._id, data.user)
+    result._doc['isCollection'] = await getUserCollectionStatus(
+      data._id,
+      data.user
+    )
+  }
+
   return {
     code: 200,
     data: result,
@@ -87,9 +85,88 @@ async function del(data) {
     data: result,
   }
 }
+async function like(data) {
+  let { _id, user } = data
+  let isLikes = await getUserLikeStatus(_id, user)
+  let updateQuery = {
+    $push: {
+      likes: user,
+    },
+  }
+  if (isLikes) {
+    updateQuery = {
+      $pull: {
+        likes: user,
+      },
+    }
+  }
+  let saveStatus = await Model.updateOne(
+    {
+      _id: mongoose.Types.ObjectId(_id),
+    },
+    updateQuery
+  )
+  return {
+    code: 200,
+    msg: !isLikes ? '点赞成功' : '取消点赞',
+    data: !isLikes,
+  }
+}
+async function collection(data) {
+  let { _id, user } = data
+  let isCollection = await getUserCollectionStatus(_id, user)
+  let updateQuery = {
+    $push: {
+      collections: user,
+    },
+  }
+  if (isCollection) {
+    updateQuery = {
+      $pull: {
+        collections: user,
+      },
+    }
+  }
+  let saveStatus = await Model.updateOne(
+    {
+      _id: mongoose.Types.ObjectId(_id),
+    },
+    updateQuery
+  )
+  return {
+    code: 200,
+    msg: !isCollection ? '收藏成功' : '取消收藏',
+    data: !isCollection,
+  }
+}
+async function getUserCollectionStatus(post_id, user) {
+  let collectionStatus = await Model.findOne({
+    _id: mongoose.Types.ObjectId(post_id),
+    collections: {
+      $elemMatch: {
+        $eq: mongoose.Types.ObjectId(user),
+      },
+    },
+  })
+  return collectionStatus ? true : false
+}
+async function getUserLikeStatus(post_id, user) {
+  let likeStatus = await Model.findOne({
+    _id: mongoose.Types.ObjectId(post_id),
+    likes: {
+      $elemMatch: {
+        $eq: mongoose.Types.ObjectId(user),
+      },
+    },
+  })
+  console.log(likeStatus)
+  return likeStatus ? true : false
+}
 module.exports = {
   list,
   save,
   detail,
   del,
+  like,
+  collection,
 }

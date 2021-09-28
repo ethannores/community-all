@@ -2,12 +2,30 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const ModelSchema = new Schema({
-	post_id:Schema.Types.ObjectId,
+	post_id:{
+		type:Schema.Types.ObjectId,
+		ref:'post'
+	},
 	content:String,
 	img:String,
-	user:Schema.Types.ObjectId,
-	pid:Schema.Types.ObjectId,
-	reply_user:Schema.Types.ObjectId,
+	likes:[
+		{
+			type:Schema.Types.ObjectId,
+			ref:'user'
+		}
+	],
+	user:{
+		type:Schema.Types.ObjectId,
+		ref:'user'
+	},
+	pid:{
+		type:Schema.Types.ObjectId,
+		ref:'comment'
+	},
+	reply_user:{
+		type:Schema.Types.ObjectId,
+		ref:'user'
+	},
 	created_at:{
 		type:Date,
 		default:Date.now

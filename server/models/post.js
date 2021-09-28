@@ -1,10 +1,19 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
+// const UserSchema = require('./user')
+// const CategorySchema = require('./category')
+
 const ModelSchema = new Schema({
   title: String,
-  author: Schema.Types.ObjectId,
-  category: [Schema.Types.ObjectId],
+  author: {
+    type:Schema.Types.ObjectId,
+    ref:'user'
+  },
+  category: [{
+    type:Schema.Types.ObjectId,
+    ref:'category'
+  }],
   content: String,
   created_at: {
     type: Date,

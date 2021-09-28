@@ -2,8 +2,8 @@
 	<div>
 		<van-tabbar route>
 			<van-tabbar-item to="/" icon="home-o">首页</van-tabbar-item>
-			<van-tabbar-item to="/shop" icon="shop-o">商城</van-tabbar-item>
-			<van-tabbar-item to="/community" icon="smile-o">社区</van-tabbar-item>
+			<!-- <van-tabbar-item to="/community" icon="smile-o">社区</van-tabbar-item> -->
+			<van-tabbar-item to="/message" icon="chat-o">消息</van-tabbar-item>
 			<van-tabbar-item to="/my" icon="user-o">我的</van-tabbar-item>
 		</van-tabbar>
 	</div>
