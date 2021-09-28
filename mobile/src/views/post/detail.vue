@@ -68,8 +68,8 @@ export default {
   methods: {
     //点赞
     likeHandle(){
+      if(!this.$store.state.user_info._id)return;
       likePost({_id:this.id,user:this.$store.state.user_info._id}).then(res=>{
-        console.log(res)
         this.detailData.isLike=res.data;
         if(res.data){
           this.detailData.likes.push(1)
@@ -80,8 +80,8 @@ export default {
     },
     //收藏
     collectionHandle(){
+      if(!this.$store.state.user_info._id)return;
       collectionPost({_id:this.id,user:this.$store.state.user_info._id}).then(res=>{
-        console.log(res)
         this.detailData.isCollection=res.data
         if(res.data){
           this.detailData.collections.push(1)
