@@ -15,9 +15,10 @@
         </div>
       </template>
       <template #right-icon>
-        <div style="margin-top:4px;">
-          <van-icon name="good-job-o" /><span>0</span>
-        </div>
+          <div class="like" style="margin-top:4px;" @click="likeHandle(comment)">
+            <van-icon :name="comment.likes.indexOf($store.state.user_info._id)>-1?'good-job':'good-job-o'" />
+            <span>{{comment.likes.length}}</span>
+          </div>
       </template>
 
     </van-cell>
@@ -25,12 +26,27 @@
 </template>
 
 <script>
+import {likeComment} from '../../../api/post'
 export default {
   props: {
     comment: {
       type: Object,
       default: () => {},
     },
+  },
+  methods: {
+    likeHandle(item){
+      let user = this.$store.state.user_info._id;
+      if(!user)return;
+      likeComment({_id:item._id,user}).then(res=>{
+        if(res.data){
+          item.likes.push(user)
+        }else{
+          item.likes.splice(item.likes.indexOf(user),1)
+        }
+      })
+      // console.log(item)
+    }
   },
 }
 </script>
