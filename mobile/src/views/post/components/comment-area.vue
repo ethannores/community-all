@@ -2,78 +2,83 @@
   <div class="comment-area">
     <div class="top">
       <span class="title">全部评论({{list.length}})</span>
-      <span class="type active">默认</span>
-      <span class="type">最新</span>
-      <span class="type">赞多</span>
-      <span class="type">回复多</span>
+      <span class="type" :class="{'active':!params.type}" @click="changeType('')">默认</span>
+      <span class="type" :class="{'active':params.type=='new'}" @click="changeType('new')">最新</span>
+      <span class="type" :class="{'active':params.type=='like'}" @click="changeType('like')">赞多</span>
+      <span class="type" :class="{'active':params.type=='reply'}" @click="changeType('reply')">回复多</span>
     </div>
     <div class="main">
-      <comment-item v-for="item in list" :key="item._id" :comment="item"></comment-item>
+      <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
+        <van-list v-model="isLoading" :finished="isFinish" finished-text="没有更多了" @load="onLoad">
+          <comment-item v-for="item in list" :key="item._id" :comment="item"></comment-item>
+        </van-list>
+      </van-pull-refresh>
     </div>
   </div>
 </template>
 
 <script>
-  import {fetchCommentList} from '../../../api/post'
-  import CommentItem from './comment-item.vue'
-  export default {
-    components:{
-      CommentItem
+import { fetchCommentList } from "../../../api/post"
+import listMixin from "../../../mixins/list"
+import CommentItem from "./comment-item.vue"
+export default {
+  components: {
+    CommentItem,
+  },
+  mixins: [listMixin],
+  props: {
+    post_id: {
+      type: String,
+      default: "",
     },
-    
-    props:{
-      post_id:{
-        type:String,
-        default:""
-      }
+  },
+  data() {
+    return {
+    }
+  },
+  created() {
+    this.params['type']='';
+    this.params['post_id']=this.post_id;
+  },
+  methods: { 
+    //列表排序
+    changeType(type) {
+      this.params.type = type
+      this.onRefresh()
     },
-    data(){
-      return{
-        params:{
-          page:1,
-          limit:10,
-          type:'new',
-          post_id:this.post_id
-        },
-        list:[]
-      }
+    //获取列表
+    getList() {
+      fetchCommentList(this.params).then(res => {
+        this.dealDataToList(res)
+      })
     },
-    created() {
-      this.getList();
-    },
-    methods: {
-      getList(){
-        fetchCommentList(this.params).then(res=>{
-          this.list=[...this.list,...res.data]
-        })
-      }
-    },
-  }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-.comment-area{
+.comment-area {
   width: 100%;
   margin-top: 100px;
   display: flex;
   flex-flow: column nowrap;
   padding-bottom: 150px;
-  .top{
+  .top {
     width: 100%;
     padding: 10px;
-    border-bottom: 1px solid rgba(0,0,0,.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     font-size: 24px;
-    
-    span{
+
+    span {
       margin-right: 30px;
-      &.title{
+      &.title {
         font-size: 32px;
       }
-      &.type{
+      &.type {
         position: relative;
-        &.active{
-          color:#1989fa;
-          // font-weight: 600;  
+        &.active {
+          color: #1989fa;
+          // font-weight: 600;
           font-size: 28px;
         }
       }
