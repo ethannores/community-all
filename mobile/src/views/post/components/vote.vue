@@ -2,7 +2,7 @@
 <div class="vote-main">
   <div class="vote-upload" v-if="vote.data.user_upload==2">
     <h3>用户上传</h3>
-    <p>该贴允许用户提供投票项目</p>
+    <p>该贴允许用户提供投票项目，上传后待后台审核通过才会展示</p>
     <van-button type="info" size="mini">上传</van-button>
   </div>
   <div class="vote-rule" v-if="vote.data">
