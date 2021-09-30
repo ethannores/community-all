@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
 export const formatDateMDHM = function(str) {
+  if(!str)return;
 	let ptime = new Date(str).getTime()
-
 	const twentyFourHours = 24 * 60 * 60 * 1000
 	const fortyEightHours = 24 * 60 * 60 * 1000 * 2
 	const date = new Date()

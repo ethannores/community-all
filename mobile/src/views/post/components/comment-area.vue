@@ -14,6 +14,8 @@
         </van-list>
       </van-pull-refresh>
     </div>
+    <!-- 评论详情 -->
+    <comment-detail></comment-detail>
   </div>
 </template>
 
@@ -21,9 +23,10 @@
 import { fetchCommentList } from "../../../api/post"
 import listMixin from "../../../mixins/list"
 import CommentItem from "./comment-item.vue"
+import CommentDetail from "./comment-detail.vue"
 export default {
   components: {
-    CommentItem,
+    CommentItem,CommentDetail
   },
   mixins: [listMixin],
   props: {

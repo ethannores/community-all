@@ -10,7 +10,7 @@
       <template #label>
         <div class="content">{{comment.content}}</div>
         <div class="time">
-          <span>{{comment.user.created_at | formatDateMDHM}}</span>
+          <span>{{comment.created_at | formatDateMDHM}}</span>
           <span class="reply_num">回复 0</span>
         </div>
       </template>
@@ -20,7 +20,6 @@
             <span>{{comment.likes.length}}</span>
           </div>
       </template>
-
     </van-cell>
   </div>
 </template>
