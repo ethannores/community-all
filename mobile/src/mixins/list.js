@@ -20,7 +20,6 @@ var listMixin = {
     },
     //上拉加载
     onLoad(e) {
-      console.log(1111)
       this.isLoading = true
       this.getList()
     },

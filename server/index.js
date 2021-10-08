@@ -43,6 +43,7 @@ app.use('/permission', require('./routes/permission'))
 app.use('/comment', require('./routes/comment'))
 app.use('/vote', require('./routes/vote'))
 app.use('/category', require('./routes/category'))
+app.use('/follow', require('./routes/follow'))
 
 app.get('/', (erq, res) => {
   res.send('你好呀')

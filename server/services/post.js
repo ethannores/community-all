@@ -1,6 +1,7 @@
 const Model = require('../models/post')
 const mongoose = require('mongoose')
 const VoteService = require('./vote')
+const FollowService =require('./follow')
 async function list(data) {
   let page = +data.page || 1
   let limit = +data.limit || 2
@@ -66,6 +67,7 @@ async function detail(data) {
     })
   if (data.user) {
     result._doc['isLike'] = await getUserLikeStatus(data._id, data.user)
+    result._doc['isFollow'] = await FollowService.getFollowStatus({user:data.user,follow:result.author._id})
     result._doc['isCollection'] = await getUserCollectionStatus(
       data._id,
       data.user

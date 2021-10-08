@@ -12,7 +12,8 @@
           <span>{{detailData.author.username}}</span>
         </div>
         <div class="right" v-if="detailData.author._id!=$store.state.user_info._id">
-          <van-button type="primary" size="mini">关注</van-button>
+          <van-button v-if="!detailData.isFollow" type="primary" size="mini" @click="followHandle(detailData.author._id)">关注</van-button>
+          <van-button v-else type="default" size="mini" @click="cancelFollowHandle(detailData.author._id)">取消关注</van-button>
         </div>
       </div>
       <!-- 主体内容 -->
@@ -49,6 +50,7 @@
 
 <script>
 import { fetchDetail, likePost, collectionPost } from "../../api/post"
+import {followHandle,cancelFollowHandle} from '@/api/user'
 import NavBar from "../../components/NavBar.vue"
 import PostComment from "./components/post-comment.vue"
 import CommentArea from "./components/comment-area.vue"
@@ -84,6 +86,22 @@ export default {
     })
   },
   methods: {
+    //点击取消关注
+    cancelFollowHandle(follow_id){
+      cancelFollowHandle({user: this.$store.state.user_info._id,follow:follow_id}).then(res=>{
+        if(res.code==200){
+          this.detailData.isFollow=false;
+        }
+      })
+    },
+    //点击关注
+    followHandle(follow_id){
+      followHandle({user: this.$store.state.user_info._id,follow:follow_id}).then(res=>{
+        if(res.code==200){
+          this.detailData.isFollow=true;
+        }
+      })
+    },
     //关闭回复弹层
     closeReplyHandle() {
       this.comment_reply = false
