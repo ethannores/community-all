@@ -12,52 +12,64 @@
 </template>
 
 <script>
-import {postComment} from '../../../api/post'
+import { postComment } from "../../../api/post"
 export default {
-  props:{
-    post_id:{
-      type:String,
-      default:''
+  props: {
+    post_id: {
+      type: String,
+      default: "",
     },
-    reply_to:{
-      type:Object,
-      default:()=>{}
-    }
+    reply_to: {
+      type: Object,
+      default: () => {},
+    },
   },
-  data(){
-    return{content: ''}
+  data() {
+    return { content: "" }
+  },
+  inject: {
+    mainVm: {
+      default: () => {},
+    },
   },
   computed: {
-    inputPlaceholder () {
+    inputPlaceholder() {
       const replyTo = this.reply_to
-      return replyTo ? `回复 ${replyTo.aut_name}` : '优质评论将会被优先展示'
-    }
+      return replyTo.user
+        ? `回复 ${replyTo.user.username}`
+        : "优质评论将会被优先展示"
+    },
   },
   methods: {
-    async onPostComment(){
-      if(!this.content){
-        this.$toast('没有填写内容不能发布！');
-        return 
+    async onPostComment() {
+      if (!this.content) {
+        this.$toast("没有填写内容不能发布！")
+        return
       }
       this.$toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
-        message: '发布中'
+        message: "发布中",
       })
-      try{
+      try {
         let result = await postComment({
-          post_id:this.post_id,
-          user:this.$store.state.user_info._id,
-          content:this.content
+          post_id: this.post_id,
+          user: this.$store.state.user_info._id,
+          reply_to: this.reply_to._id ? this.reply_to._id : "",
+          content: this.content,
         })
-        this.$toast.success('发布成功')
+        if (result.code == 200) {
+          this.$toast.success("发布成功")
+          this.content = ""
+          this.mainVm.closeReplyHandle();
+        }
+
         console.log(result)
-      }catch(err){
-        console.log('发布失败', err)
-        this.$toast.fail('发布失败')
+      } catch (err) {
+        console.log("发布失败", err)
+        this.$toast.fail("发布失败")
       }
-      
-    }
+    },
   },
 }
 </script>

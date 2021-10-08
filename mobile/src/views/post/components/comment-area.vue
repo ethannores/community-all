@@ -15,7 +15,7 @@
       </van-pull-refresh>
     </div>
     <!-- 评论详情 -->
-    <comment-detail></comment-detail>
+    <!-- <comment-detail></comment-detail> -->
   </div>
 </template>
 

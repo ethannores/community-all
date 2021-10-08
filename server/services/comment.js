@@ -16,13 +16,51 @@ async function list(data) {
 	}else if(type=='reply'){
 
 	}
+	where['pid']=null
+	where['status']=1
+	// Model.find(where).sort(sort).skip((page-1)*limit).limit(limit).populate({
+	// 	path:'user',
+	// 	select:{
+	// 		username:1,
+	// 		avatar:1
+	// 	}
+	// }).exec(async (err,dom)=>{
+	// 	for(let i=0;i<dom.length;i++){
+	// 		dom._doc['children']=await Model.find({
+	// 			pid:mongoose.Types.ObjectId(dom[i]._id)
+	// 		}).populate({
+	// 			path:'user',
+	// 			select:{
+	// 				username:1,
+	// 				avatar:1
+	// 			}
+	// 		})
+	// 	}
+	// 	console.log(dom)
+	// })
 	let findResult=await Model.find(where).sort(sort).skip((page-1)*limit).limit(limit).populate({
 		path:'user',
 		select:{
 			username:1,
 			avatar:1
 		}
-	})
+	}).populate({
+		path:'childrens',
+		populate:[{
+			path:'user',
+			select:{
+				username:1,
+				avatar:1
+			}
+		},{
+			path:'reply_user',
+			select:{
+				username:1,
+				avatar:1
+			}
+		}]
+	});
+	console.log(findResult[0].childrens)
 	let count = await Model.countDocuments(where)
 	return {
 		data:findResult,
@@ -30,15 +68,22 @@ async function list(data) {
 	}
 }
 async function save(data) {
-  let {_id,content,user,post_id}=data;
+  let {_id,content,user,post_id,reply_to}=data;
   //新增内容
   let returnData={}
-  let saveResult = await Model.create({
-    content,user,post_id
-  })
+	let createData={
+		content,user,post_id,reply_to
+	}
+	if(reply_to){
+		//说明是回复别人，则获取对方相关信息
+		let data = await detail({id:reply_to})
+		createData['pid']=data.data.pid||reply_to;
+		createData['reply_user']=data.data.user;
+	}
+  let saveResult = await Model.create(createData)
   returnData['data']=saveResult
   returnData['code']=200
-  returnData['msg']='保存成功'
+  returnData['msg']='操作成功'
   return returnData
 }
 async function detail(data) {

@@ -11,8 +11,9 @@
         <div class="content">{{comment.content}}</div>
         <div class="time">
           <span>{{comment.created_at | formatDateMDHM}}</span>
-          <span class="reply_num">回复 0</span>
+          <span class="reply_num" @click="replyHandle(comment)">回复 {{comment.childrens.length}}</span>
         </div>
+        <children-comment :listData="comment.childrens" v-if="comment.childrens.length>0"></children-comment>
       </template>
       <template #right-icon>
           <div class="like" style="margin-top:4px;" @click="likeHandle(comment)">
@@ -26,14 +27,32 @@
 
 <script>
 import {likeComment} from '../../../api/post'
+import ChildrenComment from './children-comment.vue'
 export default {
+  components:{
+    ChildrenComment
+  },
   props: {
     comment: {
       type: Object,
       default: () => {},
     },
   },
+  inject:{
+    mainVm:{
+      default:()=>{}
+    }
+  },
+  created() {
+    
+  },
   methods: {
+    //回复
+    replyHandle(item){
+      this.mainVm.comment_reply=true;
+      this.mainVm.replyTo=item;
+    },
+    //点赞
     likeHandle(item){
       let user = this.$store.state.user_info._id;
       if(!user)return;

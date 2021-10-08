@@ -37,81 +37,106 @@
         <van-icon :name="detailData.isLike?'good-job':'good-job-o'" />
         <span>{{detailData.likes.length}}</span>
       </div>
-      
+
     </div>
     <!-- 评论帖子 -->
-    <van-popup v-model="comment_reply" position="bottom" get-container="body"><post-comment :post_id="id"></post-comment></van-popup>
-    
+    <van-popup v-model="comment_reply" position="bottom" get-container="body" @closed="closeReplyHandle">
+      <post-comment :post_id="id" :reply_to="replyTo"></post-comment>
+    </van-popup>
+
   </div>
 </template>
 
 <script>
-import { fetchDetail,likePost,collectionPost } from "../../api/post"
+import { fetchDetail, likePost, collectionPost } from "../../api/post"
 import NavBar from "../../components/NavBar.vue"
-import PostComment from './components/post-comment.vue'
-import CommentArea from './components/comment-area.vue'
-import VoteArea from './components/vote.vue'
+import PostComment from "./components/post-comment.vue"
+import CommentArea from "./components/comment-area.vue"
+import VoteArea from "./components/vote.vue"
 export default {
   components: {
-    NavBar,PostComment,CommentArea,VoteArea
+    NavBar,
+    PostComment,
+    CommentArea,
+    VoteArea,
   },
+
   data() {
     return {
       id: this.$route.params.id,
       detailData: {},
       comment_reply: false,
+      replyTo: {},
+    }
+  },
+  provide() {
+    return {
+      mainVm: this,
     }
   },
   created() {
-    fetchDetail({_id:this.id,user:this.$store.state.user_info._id||''}).then(res => {
+    fetchDetail({
+      _id: this.id,
+      user: this.$store.state.user_info._id || "",
+    }).then(res => {
       console.log(res)
       this.detailData = res.data
     })
   },
   methods: {
+    //关闭回复弹层
+    closeReplyHandle() {
+      this.comment_reply = false
+      this.replyTo = {}
+    },
     //点赞
-    likeHandle(){
-      if(!this.$store.state.user_info._id){
-        this.$toast('请先登录');
+    likeHandle() {
+      if (!this.$store.state.user_info._id) {
+        this.$toast("请先登录")
         this.$router.push({
-          path:'/login',
-          query:{
-            redirect:this.$route.path
-          }
+          path: "/login",
+          query: {
+            redirect: this.$route.path,
+          },
         })
         return
-      };
-      likePost({_id:this.id,user:this.$store.state.user_info._id}).then(res=>{
-        this.detailData.isLike=res.data;
-        if(res.data){
+      }
+      likePost({
+        _id: this.id,
+        user: this.$store.state.user_info._id,
+      }).then(res => {
+        this.detailData.isLike = res.data
+        if (res.data) {
           this.detailData.likes.push(1)
-        }else{
+        } else {
           this.detailData.likes.pop()
         }
       })
     },
     //收藏
-    collectionHandle(){
-      if(!this.$store.state.user_info._id){
-        this.$toast('请先登录');
+    collectionHandle() {
+      if (!this.$store.state.user_info._id) {
+        this.$toast("请先登录")
         this.$router.push({
-          path:'/login',
-          query:{
-            redirect:this.$route.path
-          }
+          path: "/login",
+          query: {
+            redirect: this.$route.path,
+          },
         })
         return
-      };
-      collectionPost({_id:this.id,user:this.$store.state.user_info._id}).then(res=>{
-        this.detailData.isCollection=res.data
-        if(res.data){
+      }
+      collectionPost({
+        _id: this.id,
+        user: this.$store.state.user_info._id,
+      }).then(res => {
+        this.detailData.isCollection = res.data
+        if (res.data) {
           this.detailData.collections.push(1)
-        }else{
+        } else {
           this.detailData.collections.pop()
         }
       })
     },
-    
   },
 }
 </script>

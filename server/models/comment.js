@@ -20,11 +20,14 @@ const ModelSchema = new Schema({
 	},
 	pid:{
 		type:Schema.Types.ObjectId,
-		ref:'comment'
 	},
 	reply_user:{
 		type:Schema.Types.ObjectId,
 		ref:'user'
+	},
+	reply_to:{
+		type:Schema.Types.ObjectId,
+		ref:'comment'
 	},
 	created_at:{
 		type:Date,
@@ -34,6 +37,16 @@ const ModelSchema = new Schema({
 		type:Number,
 		default:1,//1正常显示 2被禁
 	}
+},{
+  toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+  toObject: { virtuals: true } // So `toObject()` output includes virtuals
 })
+
+ModelSchema.virtual('childrens',{
+	ref: 'comment',
+  localField: '_id',
+  foreignField: 'pid'
+})
+
 
 module.exports = mongoose.model('comment', ModelSchema)
