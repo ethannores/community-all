@@ -12,11 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "bluebird": "^3.7.2",
     "compression": "^1.7.4",
     "dotenv": "^10.0.0",
     "express": "^5.0.0-alpha.8",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.0",
+    "redis": "^3.1.2",
     "socket.io": "^4.2.0"
   }
 }
