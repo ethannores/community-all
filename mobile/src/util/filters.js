@@ -15,12 +15,12 @@ export const formatDateMDHM = function(str) {
 	const lastYesterdayTime = new Date(todayTime - fortyEightHours).getTime()
 
 	if (ptime >= todayTime) {
-		return dayjs(str).format('[今天] HH[:]mm')
+		return dayjs(str).format('HH[:]mm')
 	} else if (ptime < todayTime && yesterdayTime <= ptime) {
 		return dayjs(str).format('[昨天] HH[:]mm')
 	} else if (ptime < yesterdayTime && lastYesterdayTime <= ptime) {
 		return dayjs(str).format('[前天] HH[:]mm')
 	} else {
-		return dayjs(str).format('MM[月]DD[日] HH[:]mm')
+		return dayjs(str).format('MM[月]DD[日]')
 	}
 }

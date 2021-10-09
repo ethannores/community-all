@@ -28,7 +28,7 @@ export function cancelFollowHandle(data){
 export function fetchDetail(data){
   return request({
     url: '/user/detail',
-    method: 'post',
-    data,
+    method: 'get',
+    params:data,
   })
 }

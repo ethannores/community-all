@@ -1,6 +1,9 @@
 const Model = require('../models/user')
 const { jwtSecret } = require('../config/config')
 const jwt = require('jsonwebtoken')
+const mongoose=require('mongoose')
+const FollowService=require('./follow')
+const PostService = require('./post')
 async function list(data) {
   let page = +data.page || 1
   let limit = +data.limit || 20
@@ -34,7 +37,6 @@ async function list(data) {
   return findResult
 }
 async function save(data) {
-  console.log(data.username, data.password)
   const { username, password } = data
   let findResult = await Model.findOne({
     username,
@@ -107,8 +109,15 @@ async function login(data) {
   return returnData
 }
 async function detail(data) {
-  let { id } = data
-  let result = await Model.findById(id)
+  let { _id } = data
+  let result = await Model.findById(mongoose.Types.ObjectId(_id)).select('username avatar _id')
+  let followAndFans=await FollowService.getNumber(_id)
+  let postNum=await PostService.getNumber(_id)
+  result._doc['follows']=followAndFans.follows
+  result._doc['fans']=followAndFans.fans
+  result._doc['posts']=postNum.posts
+  result._doc['likes']=postNum.likes
+  result._doc['collections']=postNum.collections
   return {
     code: 200,
     data: result,

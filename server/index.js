@@ -48,5 +48,8 @@ app.use('/follow', require('./routes/follow'))
 app.get('/', (erq, res) => {
   res.send('你好呀')
 })
-
-app.listen(3456)
+//websocket 服务
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, { transports: ['websocket'] })
+require('./services/io')(io)
+server.listen(3456)

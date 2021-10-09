@@ -4,7 +4,9 @@ import router from './router'
 import store from './store'
 import './styles/index.scss'
 import http from './util/http'
-
+//引入socket
+import Socket from 'socket.io-client'
+import { v4 as uuidv4 } from 'uuid';
 import {
   Button,
   Tabbar,
@@ -25,6 +27,14 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = http
 Vue.prototype.$toast = Toast
+
+Vue.prototype.$io = Socket('http://localhost:3456', {
+  transports: ['websocket'],
+  query: {
+    user_id: store.state.user_info._id,
+    uuid:uuidv4()
+  },
+})
 //定义全局filter
 import * as filters from './util/filters.js'
 Object.keys(filters).forEach(key => {
@@ -46,6 +56,9 @@ Vue.use(Button)
   .use(Field)
   .use(List)
   .use(PullRefresh)
+
+//初始化socket.io
+
 new Vue({
   router,
   store,

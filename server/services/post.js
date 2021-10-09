@@ -1,7 +1,7 @@
 const Model = require('../models/post')
 const mongoose = require('mongoose')
 const VoteService = require('./vote')
-const FollowService =require('./follow')
+const FollowService = require('./follow')
 async function list(data) {
   let page = +data.page || 1
   let limit = +data.limit || 2
@@ -54,6 +54,7 @@ async function save(data) {
   returnData['msg'] = '保存成功'
   return returnData
 }
+// 获取详情
 async function detail(data) {
   let { _id } = data
   let result = await Model.findById(mongoose.Types.ObjectId(_id))
@@ -66,15 +67,21 @@ async function detail(data) {
       select: { title: 1 },
     })
   if (data.user) {
-    result._doc['isLike'] = await getUserLikeStatus(data._id, data.user)
-    result._doc['isFollow'] = await FollowService.getFollowStatus({user:data.user,follow:result.author._id})
+    result._doc['isLike'] = await getUserLikeStatus(
+      data._id,
+      data.user
+    )
+    result._doc['isFollow'] = await FollowService.getFollowStatus({
+      user: data.user,
+      follow: result.author._id,
+    })
     result._doc['isCollection'] = await getUserCollectionStatus(
       data._id,
       data.user
     )
   }
-  if(result._doc['type']==2){
-    result._doc['votes'] = await VoteService.detail({post_id:_id})
+  if (result._doc['type'] == 2) {
+    result._doc['votes'] = await VoteService.detail({ post_id: _id })
   }
 
   return {
@@ -82,6 +89,7 @@ async function detail(data) {
     data: result,
   }
 }
+// 删除文章
 async function del(data) {
   let { id } = data
   let result = await Model.findByIdAndRemove(id)
@@ -91,6 +99,7 @@ async function del(data) {
     data: result,
   }
 }
+// 点赞文章
 async function like(data) {
   let { _id, user } = data
   let isLikes = await getUserLikeStatus(_id, user)
@@ -118,6 +127,7 @@ async function like(data) {
     data: !isLikes,
   }
 }
+// 收藏
 async function collection(data) {
   let { _id, user } = data
   let isCollection = await getUserCollectionStatus(_id, user)
@@ -145,6 +155,7 @@ async function collection(data) {
     data: !isCollection,
   }
 }
+// 获取收藏状态
 async function getUserCollectionStatus(post_id, user) {
   let collectionStatus = await Model.findOne({
     _id: mongoose.Types.ObjectId(post_id),
@@ -156,6 +167,7 @@ async function getUserCollectionStatus(post_id, user) {
   })
   return collectionStatus ? true : false
 }
+// 获取点赞状态
 async function getUserLikeStatus(post_id, user) {
   let likeStatus = await Model.findOne({
     _id: mongoose.Types.ObjectId(post_id),
@@ -167,6 +179,31 @@ async function getUserLikeStatus(post_id, user) {
   })
   return likeStatus ? true : false
 }
+//获取用户相关的文章数（发布，收藏，点赞）
+async function getNumber(user_id) {
+  let likes = await Model.countDocuments({
+    likes: {
+      $elemMatch: {
+        $eq: mongoose.Types.ObjectId(user_id),
+      },
+    },
+  })
+  let collections = await Model.countDocuments({
+    collections: {
+      $elemMatch: {
+        $eq: mongoose.Types.ObjectId(user_id),
+      },
+    },
+  })
+  let posts = await Model.countDocuments({
+    author: mongoose.Types.ObjectId(user_id),
+  })
+  return {
+    likes,
+    collections,
+    posts,
+  }
+}
 module.exports = {
   list,
   save,
@@ -174,4 +211,5 @@ module.exports = {
   del,
   like,
   collection,
+  getNumber,
 }

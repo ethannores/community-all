@@ -61,10 +61,18 @@ async function del(data) {
 		data: result,
 	}
 }
+//获取某个人的关注和粉丝数
+async function getNumber(user_id){
+	let follows = await Model.countDocuments({user:mongoose.Types.ObjectId(user_id)})
+	let fans = await Model.countDocuments({follow:mongoose.Types.ObjectId(user_id)})
+	return {
+		follows,fans
+	}
+}
 
 module.exports = {
 	list,
 	save,
 	del,
-	getFollowStatus,
+	getFollowStatus,getNumber
 }
