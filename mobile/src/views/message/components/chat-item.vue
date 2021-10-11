@@ -1,9 +1,9 @@
 <template>
-  <div class="item" :class="{'right':data%2==0}">
+  <div class="item" :class="{'right':user_id==data.sender._id}">
     <div class="content">
-      <span class="text">xfvas</span>
+      <span class="text">{{data.content}}</span>
     </div> 
-    <div class="time">{{'2021-10-10 10:50'|formatDateMDHM}}</div>
+    <div class="time">{{data.created_at|formatDateMDHM}}</div>
     
   </div>
 </template>
@@ -12,9 +12,15 @@
 export default {
   props: {
     data: {
-      type: Number,
+      type: Object,
+      default:()=>{}
     },
   },
+  data(){
+    return{
+      user_id:this.$store.state.user_info._id
+    }
+  }
 }
 </script>
 

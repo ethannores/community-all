@@ -201,6 +201,31 @@ async function getUnreadByUser(user_id) {
   console.log(unreadNum)
   return unreadNum
 }
+//根据chatId 获取相关聊天记录
+async function getChatDetail(data){
+  let {chat_id}=data;
+  let findReault = await Model.find({
+    chat_id:mongoose.Types.ObjectId(chat_id)
+  }).populate('sender','_id username avatar')
+  .populate('receiver','_id username avatar')
+  // .projection({
+  //   chat_id:1,
+  //   content:1,
+  //   created_at:1,
+  //   status:1,
+  //   type:1,
+  //   sender_id:'$sender._id',
+  //   sender_avatar:'$sender.avatar',
+  //   sender:'$sender.username',
+  //   receiver_id:'$receiver._id',
+  //   receiver_avatar:'$receiver.avatar',
+  //   receiver:'$receiver.username',
+  // })
+  return {
+    code:200,
+    data:findReault
+  }
+}
 
 module.exports = {
   list,
@@ -209,4 +234,5 @@ module.exports = {
   del,
   getUnreadByUser,
   sendMessage,
+  getChatDetail
 }

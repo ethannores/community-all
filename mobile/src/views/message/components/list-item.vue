@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="item">
+    <div class="item" @click="$router.push(`/message/chat/${data._id}`)">
       <div class="left">
         <img :src="user_id==data.sender_id?data.receiver_avatar:data.sender_avatar" alt="">
       </div>
@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      user_id:this.$store.state.user_info_id
+      user_id:this.$store.state.user_info._id
     }
   },
 }

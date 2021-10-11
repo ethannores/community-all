@@ -17,6 +17,12 @@ Route.get('/detail', async (req, res, next) => {
 	let result = await Service.detail(data)
 	res.send(result)
 })
+Route.get('/chat', async (req, res, next) => {
+  let data =
+		Object.getOwnPropertyNames(req.body).length > 0 ? req.body : req.query
+	let result = await Service.getChatDetail(data)
+	res.send(result)
+})
 Route.post('/del', async (req, res, next) => {
 	let result = await Service.del(req.body)
 	res.send(result)

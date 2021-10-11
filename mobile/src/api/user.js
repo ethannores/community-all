@@ -40,8 +40,8 @@ export function fetchMsgList(data){
     params:data,
   })
 }
-//获取个人信息
-export function fetchMsgDetail(data){
+//获取两个人的聊天内容
+export function fetchChatList(data){
   return request({
     url: '/message/chat',
     method: 'get',
