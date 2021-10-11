@@ -32,3 +32,19 @@ export function fetchDetail(data){
     params:data,
   })
 }
+//获取个人聊天列表
+export function fetchMsgList(data){
+  return request({
+    url: '/message/list',
+    method: 'get',
+    params:data,
+  })
+}
+//获取个人信息
+export function fetchMsgDetail(data){
+  return request({
+    url: '/message/chat',
+    method: 'get',
+    params:data,
+  })
+}

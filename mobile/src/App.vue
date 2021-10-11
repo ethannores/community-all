@@ -30,9 +30,9 @@ export default {
 				})
 				this.$io.on("login", data => {
 					console.log("login", data)
-					this.$store.commit("SET_UNREAD", data)
-					if(data!=0 && this.$route.path.indexOf("message") == -1){
-						this.$toast(`存在 ${data} 条未读消息，请去消息中心查看`)
+					this.$store.commit("SET_UNREAD", data.unread)
+					if(data.unread!=0 && this.$route.path.indexOf("message") == -1){
+						this.$toast(` ${data.unread} 条未读消息，请去消息中心查看`)
 					}
 				})
 			}

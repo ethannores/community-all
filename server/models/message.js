@@ -7,8 +7,8 @@ const ModelSchema = new Schema({
 		type:Number,
 		default:1,//1文字消息 2图片消息
 	},
-	user:Schema.Types.ObjectId,
-	to_user:Schema.Types.ObjectId,
+	sender:Schema.Types.ObjectId,
+	receiver:Schema.Types.ObjectId,
 	created_at:{
 		type:Date,
 		default:Date.now

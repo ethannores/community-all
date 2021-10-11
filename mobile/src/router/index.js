@@ -42,6 +42,11 @@ const routes = [
     name: 'Message',
     component: () => import(/* webpackChunkName: "message" */ '../views/message/index.vue')
   },
+  {
+    path: '/message/chat/:id',
+    name: 'MessageChat',
+    component: () => import(/* webpackChunkName: "MessageChat" */ '../views/message/chat.vue')
+  },
 ]
 
 const router = new VueRouter({

@@ -5,7 +5,7 @@ Route.get('/list', async (req, res, next) => {
 	let data =
 		Object.getOwnPropertyNames(req.body).length > 0 ? req.body : req.query
 	let result = await Service.list(data)
-	res.send(result)
+	res.$pageSuccess(result)
 })
 Route.post('/save', async (req, res, next) => {
 	let result = await Service.save(req.body)

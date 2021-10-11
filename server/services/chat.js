@@ -1,5 +1,5 @@
 const Model = require('../models/chat')
-
+const mongoose = require('mongoose')
 async function list(data) {
 	let page = +data.page || 1
 	let limit = +data.limit || 20
@@ -38,26 +38,8 @@ async function list(data) {
 	return findResult
 }
 async function save(data) {
-  let {_id}=data;
-  let returnData={};
-  if(_id){
-    //id存在则修改内容
-    let findUpdateResult = await Model.findByIdAndUpdate({
-      _id
-    },{
-
-    })
-    returnData['data']=findUpdateResult
-  }else{
-    //新增内容
-    let saveResult = await Model.create({
-
-    })
-    returnData['data']=saveResult
-  }
-  returnData['code']=200
-  returnData['msg']='保存成功'
-  return returnData
+  let {sender,receiver}=data;
+  //判断当前两个用户是否已经构成了聊天id
 }
 async function detail(data) {
 	let { id } = data
@@ -76,10 +58,41 @@ async function del(data) {
 		data: result,
 	}
 }
+//获取两用户对应的聊天id
+async function getChatIdByUser(data){
+  let {sender,receiver,type=1}=data;
+  let findResult = await Model.findOne({
+    users:{
+      $all:[mongoose.Types.ObjectId(sender),mongoose.Types.ObjectId(receiver)]
+    },
+    type
+  })
+  if(findResult){
+    return findResult._id
+  }else{
+    let saveResult = await Model.create({
+      users:[sender,receiver]
+    })
+    return saveResult._id
+  }
+}
+//根据用户id获取用户所有对应的chat
+async function getChatIDs(user_id){
+  let findResuld = await Model.find({
+    users:{
+      $elemMatch:{
+        $eq:mongoose.Types.ObjectId(user_id)
+      }
+    }
+  })
+  return findResuld.map(e=>mongoose.Types.ObjectId(e._id))
+}
 
 module.exports = {
 	list,
 	save,
 	detail,
 	del,
+  getChatIdByUser,
+  getChatIDs
 }

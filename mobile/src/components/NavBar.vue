@@ -1,16 +1,20 @@
 <template>
   <div>
-    <van-nav-bar :title="title" left-arrow @click-left="onClickLeft" />
+    <van-sticky>
+      <van-nav-bar :title="title" left-arrow @click-left="onClickLeft">
+      </van-nav-bar>
+    </van-sticky>
+
   </div>
 </template>
 
 <script>
 export default {
-  props:{
-    title:{
-      type:String,
-      default:''
-    }
+  props: {
+    title: {
+      type: String,
+      default: "",
+    },
   },
   methods: {
     onClickLeft() {

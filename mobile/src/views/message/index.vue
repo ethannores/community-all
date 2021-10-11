@@ -17,10 +17,14 @@
 <script>
 import FooterNav from '../../components/FooterNav.vue'
 import MessageArea from './components/message-area.vue'
+
   export default {
     components:{
       FooterNav,MessageArea
-    }
+    },
+    methods: {
+      
+    },
   }
 </script>
 

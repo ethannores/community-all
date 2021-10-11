@@ -26,8 +26,8 @@ $r.on('end',function(e){
   console.log('redis关闭:'+e)
 })
 
-async function setData(key,data){
-  await $r.hmsetAsync(key,data)
+async function setData(key,field,data){
+  await $r.hsetAsync(key,field,data)
 }
 async function getData(key){
   return await $r.hgetallAsync(key)

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="item" v-for="(item,index) in list" :key="index">
+    <div class="item">
       <div class="left">
-        <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" alt="">
+        <img :src="user_id==data.sender_id?data.receiver_avatar:data.sender_avatar" alt="">
       </div>
       <div class="center">
         <div class="username">
-          <span>admin</span>
-          <span class="time">{{'2021-09-10 15:58' | formatDateMDHM}}</span>
+          <span>{{user_id==data.sender_id?data.receiver:data.sender}}</span>
+          <span class="time">{{data.created_at | formatDateMDHM}}</span>
         </div>
         <div class="content">
-          <span class="main">这是一条消息鸭这是一条消息鸭这是一条消息鸭这是一条消息鸭这是一条消息鸭这是一条消息鸭</span>
+          <span class="main">{{data.content}}</span>
           <span class="unread">10</span>
         </div>
       </div>
@@ -21,9 +21,15 @@
 
 <script>
 export default {
+  props:{
+    data:{
+      type:Object,
+      default:()=>{}
+    }
+  },
   data() {
     return {
-      list: Array(10).fill(1),
+      user_id:this.$store.state.user_info_id
     }
   },
 }
@@ -37,7 +43,7 @@ export default {
   align-items: center;
   padding: 10px;
   &:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   }
   .left {
     width: 100px;

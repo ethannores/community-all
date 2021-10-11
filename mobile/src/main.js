@@ -6,7 +6,6 @@ import './styles/index.scss'
 import http from './util/http'
 //引入socket
 import Socket from 'socket.io-client'
-import { v4 as uuidv4 } from 'uuid';
 import {
   Button,
   Tabbar,
@@ -21,7 +20,7 @@ import {
   Field,
   Toast,
   List,
-  PullRefresh,
+  PullRefresh,Sticky
 } from 'vant'
 Vue.config.productionTip = false
 
@@ -30,10 +29,6 @@ Vue.prototype.$toast = Toast
 
 Vue.prototype.$io = Socket('http://localhost:3456', {
   transports: ['websocket'],
-  query: {
-    user_id: store.state.user_info._id,
-    uuid:uuidv4()
-  },
 })
 //定义全局filter
 import * as filters from './util/filters.js'
@@ -56,6 +51,7 @@ Vue.use(Button)
   .use(Field)
   .use(List)
   .use(PullRefresh)
+  .use(Sticky)
 
 //初始化socket.io
 
