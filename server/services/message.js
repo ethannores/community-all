@@ -81,7 +81,7 @@ async function list(data) {
       }
     }
   ]
-  let sort = [{ $sort: { created_at: -1 } }]
+  let sort = [{ $sort: { created_at: -1 } },{$sort:{status:1}}]
   //过滤
   let findResult = await Model.aggregate([
     {
@@ -122,31 +122,19 @@ async function list(data) {
     },
     ...pageArr,
   ])
-  Object.defineProperty(findResult[0].data[0],'unread',{
-    value:5
-  })
-  let temp = findResult[0].data.map(e=>e);
   //两个数组遍历  将未读数添加上去
   if(counts.length>0){
     for(let i=0;i<counts.length;i++){
-      for(let k=0;k<temp.length;k++){
-        console.log(counts[i]['_id']==temp[k]['_id'])
-        if(counts[i]['_id']==temp[k]['_id']){
-          // Object.defineProperty(temp[k],'unread',{
-          //   value:counts[i]['count']
-          // })
-          
-          temp[k]['unread']=counts[i]['count']
-          console.log(temp[k])
+      for(let k=0;k<findResult[0].data.length;k++){
+        if(String(counts[i]['_id'])==String(findResult[0].data[k]['_id'])){
+          findResult[0].data[k]['unread']=counts[i]['count']
         }
       }
     }
   }
+  
   return findResult
-  // return {
-  //   data:temp,
-  //   count:findResult[0].count[0].count
-  // }
+
 }
 async function save(data) {
   let { _id } = data

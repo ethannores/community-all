@@ -11,7 +11,7 @@
         </div>
         <div class="content">
           <span class="main">{{data.content}}</span>
-          <span class="unread">10</span>
+          <span class="unread" v-if="data.unread">{{data.unread}}</span>
         </div>
       </div>
     </div>
