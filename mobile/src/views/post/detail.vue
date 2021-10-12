@@ -4,7 +4,9 @@
     <nav-bar :title="`详情`"></nav-bar>
     <div class="detail" v-if="detailData.title">
       <!-- 封面图 -->
-      <div class="face_img"></div>
+      <div class="face_img" v-if="detailData.face_img">
+        <img :src="detailData.face_img" alt="">
+      </div>
       <!-- 顶部用户信息 -->
       <div class="userinfo">
         <div class="left">
@@ -12,8 +14,10 @@
           <span>{{detailData.author.username}}</span>
         </div>
         <div class="right" v-if="detailData.author._id!=$store.state.user_info._id">
-          <van-button v-if="!detailData.isFollow" type="primary" size="mini" @click="followHandle(detailData.author._id)">关注</van-button>
-          <van-button v-else type="default" size="mini" @click="cancelFollowHandle(detailData.author._id)">取消关注</van-button>
+          <van-button v-if="!detailData.isFollow" type="primary" size="mini"
+            @click="followHandle(detailData.author._id)">关注</van-button>
+          <van-button v-else type="default" size="mini" @click="cancelFollowHandle(detailData.author._id)">取消关注
+          </van-button>
         </div>
       </div>
       <!-- 主体内容 -->
@@ -22,6 +26,14 @@
           {{detailData.category.map(e=>e.title).join(' / ')}}</span>
         <h2 class="title">{{detailData.title}} </h2>
         <div class="content" v-html="detailData.content"></div>
+        <div class="imgs_area" v-if="detailData.imgs&&detailData.imgs.length>0">
+          <div class="item" v-for="(i,idx) in detailData.imgs" :key="idx">
+            <div class="img_box">
+              <img :src="i" alt="">
+            </div>
+
+          </div>
+        </div>
         <vote-area v-if="detailData.votes" :vote="detailData.votes" :post_id="id"></vote-area>
       </div>
     </div>
@@ -50,7 +62,7 @@
 
 <script>
 import { fetchDetail, likePost, collectionPost } from "../../api/post"
-import {followHandle,cancelFollowHandle} from '@/api/user'
+import { followHandle, cancelFollowHandle } from "@/api/user"
 import NavBar from "../../components/NavBar.vue"
 import PostComment from "./components/post-comment.vue"
 import CommentArea from "./components/comment-area.vue"
@@ -87,18 +99,24 @@ export default {
   },
   methods: {
     //点击取消关注
-    cancelFollowHandle(follow_id){
-      cancelFollowHandle({user: this.$store.state.user_info._id,follow:follow_id}).then(res=>{
-        if(res.code==200){
-          this.detailData.isFollow=false;
+    cancelFollowHandle(follow_id) {
+      cancelFollowHandle({
+        user: this.$store.state.user_info._id,
+        follow: follow_id,
+      }).then(res => {
+        if (res.code == 200) {
+          this.detailData.isFollow = false
         }
       })
     },
     //点击关注
-    followHandle(follow_id){
-      followHandle({user: this.$store.state.user_info._id,follow:follow_id}).then(res=>{
-        if(res.code==200){
-          this.detailData.isFollow=true;
+    followHandle(follow_id) {
+      followHandle({
+        user: this.$store.state.user_info._id,
+        follow: follow_id,
+      }).then(res => {
+        if (res.code == 200) {
+          this.detailData.isFollow = true
         }
       })
     },
@@ -163,6 +181,16 @@ export default {
 .detail {
   width: 100%;
   padding: 20px;
+  .face_img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+  }
   .userinfo {
     width: 100%;
     display: flex;
@@ -179,6 +207,28 @@ export default {
   .main {
     .content {
       margin-top: 10px;
+    }
+    .imgs_area {
+      display: flex;
+      flex-flow: row nowrap;
+      margin-top: 20px;
+      .item {
+        width: 32%;
+        &:not(:nth-child(3)){
+          margin-right: 2%;
+        }
+        .img_box {
+          padding-top: 100%;
+          position: relative;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+          }
+        }
+      }
     }
     .category {
       font-size: 24px;

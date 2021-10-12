@@ -11,6 +11,10 @@ module.exports = {
 					'^/api': '', //请求的时候使用这个api就可以
 				},
 			},
+			'^/public/upload':{
+				target:'http://localhost:3456',
+				changeOrigin: true,
+			}
 		},
 	},
 }

@@ -14,7 +14,7 @@
         <div class="item" :key="i._id" v-if="i.status == 1">
           <span class="voted_flag" v-if="voteResult.indexOf(i._id)>-1">已投票</span>
           <div class="img" v-if="i.imgs">
-            <img :src="`/api${i.imgs}`" alt="">
+            <img :src="`${i.imgs}`" alt="">
           </div>
           <div class="desc">描述：{{ i.description }}</div>
           <div v-if="voteResult.length>=vote.data.limit"></div>

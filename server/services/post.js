@@ -26,8 +26,17 @@ async function list(data) {
   }
 }
 async function save(data) {
-  let { _id, category, title, content, type, vote_source, author } =
-    data
+  let {
+    _id,
+    category,
+    title,
+    content,
+    type,
+    vote_source,
+    author,
+    imgs,
+    face_img,
+  } = data
   let returnData = {}
   if (_id) {
     //id存在则修改内容
@@ -35,7 +44,16 @@ async function save(data) {
       {
         _id,
       },
-      { category, title, content, type, vote_source, author }
+      {
+        category,
+        title,
+        content,
+        type,
+        vote_source,
+        author,
+        imgs,
+        face_img,
+      }
     )
     returnData['data'] = findUpdateResult
   } else {
@@ -47,6 +65,8 @@ async function save(data) {
       type,
       vote_source,
       author,
+      imgs,
+      face_img,
     })
     returnData['data'] = saveResult
   }
