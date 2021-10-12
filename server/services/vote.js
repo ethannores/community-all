@@ -1,6 +1,7 @@
 const Model = require('../models/vote')
 const VoteRuleModel = require('../models/voteRule')
 const mongoose = require('mongoose')
+const UploadService = require('./upload')
 async function list(data) {
 	let page = +data.page || 1
 	let limit = +data.limit || 20
@@ -151,6 +152,7 @@ async function detail(data) {
         description:e.description,
         provider:e.provider,
         status:e.status,
+        imgs:e.imgs,
         _id:e._id,
         vote_users:e.vote_users.map(e=>e.user),
         vote_number:e.vote_users.length,
@@ -164,6 +166,22 @@ async function detail(data) {
 		data: result,
     items:tempData
 	}
+}
+//用户自己上传
+async function upload(data,img){
+  let {post_id,description,provider,status}=data;
+  let imgUrl;
+  if(img.img.length>0){
+    imgUrl = await UploadService.singleUpload(img.img[0])
+  }
+  let saveResult = await Model.create({
+    post_id,description,provider,status,imgs:imgUrl
+  })
+  return {
+    code:200,
+    msg:'投票项目上传成功，等待后台审核通过后，内容便会展示',
+    data:saveResult
+  }
 }
 async function del(data) {
 	let { id } = data
@@ -181,5 +199,6 @@ module.exports = {
 	detail,
 	del,
   store,
-  getUserVoteToPost
+  getUserVoteToPost,
+  upload
 }

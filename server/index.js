@@ -1,7 +1,7 @@
 const express = require('express')
 const compression = require('compression')
 const app = new express()
-
+const formidable = require('express-formidable')
 //允许跨域 视情况而定
 app.all('*', function (req, res, next) {
   //设置允许跨域的域名，*代表允许任意域名跨域
@@ -26,7 +26,8 @@ app.use(compression())
 // parse application/x-www-form-urlencoded  格式化数据
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-
+//对公共文件夹内容可见
+app.use('/public',express.static(__dirname +'/public'))
 //数据库
 console.time('db connect:')
 require('./utils/db')()

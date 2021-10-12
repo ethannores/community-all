@@ -3,7 +3,7 @@
     <div class="vote-upload" v-if="vote.data.user_upload==2">
       <h3>用户上传</h3>
       <p>该贴允许用户提供投票项目，上传后待后台审核通过才会展示</p>
-      <van-button type="info" size="mini">上传</van-button>
+      <van-button type="info" size="mini" @click="uploadVote">上传</van-button>
     </div>
     <div class="vote-rule" v-if="vote.data">
       <h3>投票规则</h3>
@@ -13,7 +13,9 @@
       <template v-for="i in vote.items">
         <div class="item" :key="i._id" v-if="i.status == 1">
           <span class="voted_flag" v-if="voteResult.indexOf(i._id)>-1">已投票</span>
-          <div class="img"></div>
+          <div class="img" v-if="i.imgs">
+            <img :src="`/api${i.imgs}`" alt="">
+          </div>
           <div class="desc">描述：{{ i.description }}</div>
           <div v-if="voteResult.length>=vote.data.limit"></div>
           <div v-else>
@@ -24,13 +26,22 @@
         </div>
       </template>
     </div>
+    <!-- 投票上传 -->
+    <van-popup v-model="uploadShow" position="bottom" get-container="body" @closed="closeUploadHandle">
+      <vote-upload :post_id="post_id"></vote-upload>
+    </van-popup>
+
   </div>
 
 </template>
 
 <script>
-import { voteStore, voteResult } from "../../../api/post"
+import { voteStore, voteResult } from "@/api/post"
+import VoteUpload from './vote-upload.vue'
 export default {
+  components:{
+    VoteUpload
+  },
   props: {
     vote: {
       type: Object,
@@ -43,6 +54,7 @@ export default {
   },
   data() {
     return {
+      uploadShow:false,
       isComplated: false,
       voteResult: [],
     }
@@ -51,8 +63,24 @@ export default {
     this.getVoteResult()
   },
   methods: {
+    //关闭上传弹框
+    closeUploadHandle(){
+      this.uploadShow=false
+    },
     //用户上传投票条目
-    uploadVote() {},
+    uploadVote() {
+      if(!this.$store.state.user_info._id){
+        this.$toast('请先登录');
+        this.$router.push({
+          ptch:'/login',
+          query:{
+            redirect:this.$route.fullPath
+          }
+        })
+        return
+      }
+      this.uploadShow = true;
+    },
     //获取当前用户针对该投票贴投票的相关结果
     getVoteResult() {
       this.isComplated = true
@@ -128,6 +156,11 @@ export default {
       background-color: #2b7a3a;
       padding: 2px 6px;
       color: white;
+    }
+    .img{
+      img{
+        width: 100%;
+      }
     }
   }
 }

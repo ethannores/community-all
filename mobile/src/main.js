@@ -20,7 +20,7 @@ import {
   Field,
   Toast,
   List,
-  PullRefresh,Sticky
+  PullRefresh,Sticky,Uploader
 } from 'vant'
 Vue.config.productionTip = false
 
@@ -52,6 +52,7 @@ Vue.use(Button)
   .use(List)
   .use(PullRefresh)
   .use(Sticky)
+  .use(Uploader)
 
 //初始化socket.io
 

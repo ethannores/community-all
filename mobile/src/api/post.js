@@ -25,6 +25,17 @@ export function voteStore(data){
     data
   })
 }
+//投票
+export function voteUpload(data){
+  return request({
+    url:'/vote/upload',
+    method:'post',
+    headers:{
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data
+  })
+}
 //获取当前用户针对该投票贴投票的情况
 export function voteResult(data){
   return request({
