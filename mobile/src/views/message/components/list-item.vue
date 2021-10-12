@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="item" @click="$router.push(`/message/chat/${data._id}`)">
+    <div class="item" @click="$router.push(`/message/chat/${user_id==data.sender_id?data.receiver_id:data.sender_id}/${data._id}`)">
       <div class="left">
         <img :src="user_id==data.sender_id?data.receiver_avatar:data.sender_avatar" alt="">
       </div>

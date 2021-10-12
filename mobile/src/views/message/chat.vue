@@ -42,6 +42,7 @@ export default {
     return {
       content: "11",
       chat_id: this.$route.params.id,
+      reciever_id: this.$route.params.receiver,
       otherUser: {},
       user_id: this.$store.state.user_info._id,
       chatList: [],
@@ -53,6 +54,17 @@ export default {
   mounted() {
     this.$io.on("message", data => {
       console.log("接收 ", data)
+      let temp = {
+        sender: {},
+      }
+      for (let k in data) {
+        if (k != "sender") {
+          temp[k] = data[k]
+        }
+      }
+      temp.sender._id = data.sender
+      this.chatList.push(temp)
+      console.log(this.chatList)
     })
   },
   methods: {
@@ -78,7 +90,8 @@ export default {
         return
       }
       this.$io.emit("sendMsg", {
-        receiver: this.receiver,
+        receiver: this.reciever_id,
+        chat_id: this.chat_id,
         content: this.content,
       })
     },
@@ -90,11 +103,11 @@ export default {
 .user_header {
   display: flex;
   align-items: center;
-  
-.username{
-  margin-left: 10px;
-}
-.status {
+
+  .username {
+    margin-left: 10px;
+  }
+  .status {
     font-size: 12px;
     margin-left: 10px;
     color: green;

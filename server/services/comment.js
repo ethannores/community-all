@@ -18,33 +18,13 @@ async function list(data) {
 	}
 	where['pid']=null
 	where['status']=1
-	// Model.find(where).sort(sort).skip((page-1)*limit).limit(limit).populate({
-	// 	path:'user',
-	// 	select:{
-	// 		username:1,
-	// 		avatar:1
-	// 	}
-	// }).exec(async (err,dom)=>{
-	// 	for(let i=0;i<dom.length;i++){
-	// 		dom._doc['children']=await Model.find({
-	// 			pid:mongoose.Types.ObjectId(dom[i]._id)
-	// 		}).populate({
-	// 			path:'user',
-	// 			select:{
-	// 				username:1,
-	// 				avatar:1
-	// 			}
-	// 		})
-	// 	}
-	// 	console.log(dom)
-	// })
-	let findResult=await Model.find(where).sort(sort).skip((page-1)*limit).limit(limit).populate({
+	let findResult=await Model.find(where).sort(sort).skip((page-1)*limit).limit(limit).populate([{
 		path:'user',
 		select:{
 			username:1,
 			avatar:1
 		}
-	}).populate({
+	},{
 		path:'childrens',
 		populate:[{
 			path:'user',
@@ -59,8 +39,7 @@ async function list(data) {
 				avatar:1
 			}
 		}]
-	});
-	console.log(findResult[0].childrens)
+	}]);
 	let count = await Model.countDocuments(where)
 	return {
 		data:findResult,
