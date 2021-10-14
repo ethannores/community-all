@@ -22,6 +22,8 @@ import {
   List,
   PullRefresh,Sticky,Uploader
 } from 'vant'
+import selfTag from './components/SelfTag.vue'
+Vue.component(selfTag.name,selfTag)
 Vue.config.productionTip = false
 
 Vue.prototype.$http = http
