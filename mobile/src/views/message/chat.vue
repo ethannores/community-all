@@ -32,7 +32,7 @@
 <script>
 import TopNav from "@/components/TopNav.vue"
 import ChatItem from "./components/chat-item.vue"
-import { fetchChatList } from "@/api/user"
+import { fetchChatList,chatRead } from "@/api/user"
 export default {
   components: {
     TopNav,
@@ -50,10 +50,10 @@ export default {
   },
   created() {
     this.getChat()
+    this.readHandle()
   },
   mounted() {
     this.$io.on("message", data => {
-      console.log("接收 ", data)
       let temp = {
         sender: {},
       }
@@ -64,10 +64,16 @@ export default {
       }
       temp.sender._id = data.sender
       this.chatList.push(temp)
-      console.log(this.chatList)
+      this.readHandle()
     })
   },
   methods: {
+    //聊天记录变为已读
+    readHandle(){
+      chatRead({receiver:this.user_id,chat_id:this.chat_id}).then(res=>{
+        console.log(res)
+      })
+    },
     //获取聊天内容事件
     getChat() {
       fetchChatList({ chat_id: this.chat_id }).then(res => {

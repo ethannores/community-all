@@ -48,3 +48,11 @@ export function fetchChatList(data){
     params:data,
   })
 }
+//获取两个人的聊天内容
+export function chatRead(data){
+  return request({
+    url: '/message/read',
+    method: 'post',
+    data,
+  })
+}

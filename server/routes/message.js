@@ -11,6 +11,10 @@ Route.post('/save', async (req, res, next) => {
 	let result = await Service.save(req.body)
 	res.send(result)
 })
+Route.post('/read', async (req, res, next) => {
+	let result = await Service.chatRead(req.body)
+	res.send(result)
+})
 Route.get('/detail', async (req, res, next) => {
   let data =
 		Object.getOwnPropertyNames(req.body).length > 0 ? req.body : req.query

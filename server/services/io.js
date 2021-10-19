@@ -16,7 +16,7 @@ module.exports = io => {
     //监听用户发送消息
     client.on('sendMsg',async data=>{
       let msgData={
-        sender:client.$user_id||'6152cb63218cdd91bfd5e571',
+        sender:client.$user_id,
         receiver:data.receiver,
         content:data.content,
       }

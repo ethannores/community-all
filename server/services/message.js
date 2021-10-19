@@ -186,6 +186,22 @@ async function sendMessage(data) {
   })
   return saveResult
 }
+//将消息变为已读
+async function chatRead(data){
+  let {chat_id,receiver} = data;
+  let result;
+  if(chat_id){
+    //聊天id存在时消息变为已读
+    result = await Model.updateMany({
+      chat_id:mongoose.Types.ObjectId(chat_id),
+      receiver:mongoose.Types.ObjectId(receiver),
+      status:1
+    },{
+      status:2
+    })
+  }
+  return result
+}
 //获取用户所有的未读消息
 async function getUnreadByUser(user_id) {
   //获取用户在的所有聊天id
@@ -234,5 +250,5 @@ module.exports = {
   del,
   getUnreadByUser,
   sendMessage,
-  getChatDetail
+  getChatDetail,chatRead
 }

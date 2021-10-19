@@ -29,7 +29,7 @@ Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$toast = Toast
 
-Vue.prototype.$io = Socket('http://localhost:3456', {
+Vue.prototype.$io = Socket('http://192.168.2.234:3456', {
   transports: ['websocket'],
 })
 //定义全局filter
