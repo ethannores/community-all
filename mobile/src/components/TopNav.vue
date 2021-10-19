@@ -6,7 +6,7 @@
           <van-icon name="down" @click="$router.go(-1)" />
         </div>
         <div class="center">
-          <slot name="title"></slot>
+          <slot name="title" :data="test"></slot>
         </div>
         <div class="right">
           <slot name="right"></slot>
@@ -18,7 +18,14 @@
 
 <script>
   export default {
-    
+    data() {
+      return {
+        test: {
+          name:'123',
+          age:23
+        }
+      }
+    },
   }
 </script>
 

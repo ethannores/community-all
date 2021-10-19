@@ -1,24 +1,24 @@
 <template>
   <div class="comment-item">
-    <van-cell v-if="comment.user">
+    <van-cell v-if="commentItem.user">
       <template #icon>
-        <van-image width="1.75rem" round height="1.75rem" fit="cover" :src="comment.user.avatar" />
+        <van-image width="1.75rem" round height="1.75rem" fit="cover" :src="commentItem.user.avatar" />
       </template>
       <template #title>
-        <div style="margin-top:4px;margin-left:4px">{{comment.user.username}}</div>
+        <div style="margin-top:4px;margin-left:4px">{{commentItem.user.username}}</div>
       </template>
       <template #label>
-        <div class="content">{{comment.content}}</div>
+        <div class="content">{{commentItem.content}}</div>
         <div class="time">
-          <span>{{comment.created_at | formatDateMDHM}}</span>
-          <span class="reply_num" @click="replyHandle(comment)">回复 {{comment.childrens.length}}</span>
+          <span>{{commentItem.created_at | formatDateMDHM}}</span>
+          <span class="reply_num" @click="replyHandle(commentItem)">回复 {{commentItem.childrens.length}}</span>
         </div>
-        <children-comment :listData="comment.childrens" v-if="comment.childrens.length>0"></children-comment>
+        <children-comment :listData="commentItem.childrens" v-if="commentItem.childrens.length>0"></children-comment>
       </template>
       <template #right-icon>
-          <div class="like" style="margin-top:4px;" @click="likeHandle(comment)">
-            <van-icon :name="comment.likes.indexOf($store.state.user_info._id)>-1?'good-job':'good-job-o'" />
-            <span>{{comment.likes.length}}</span>
+          <div class="like" style="margin-top:4px;" @click="likeHandle(commentItem)">
+            <van-icon :name="commentItem.likes.indexOf($store.state.user_info._id)>-1?'good-job':'good-job-o'" />
+            <span>{{commentItem.likes.length}}</span>
           </div>
       </template>
     </van-cell>
@@ -41,6 +41,11 @@ export default {
   inject:{
     mainVm:{
       default:()=>{}
+    }
+  },
+  data(){
+    return {
+      commentItem:this.comment
     }
   },
   created() {

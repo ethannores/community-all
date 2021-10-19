@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 顶部导航 -->
-    <nav-bar :title="`详情`"></nav-bar>
+    <nav-bar :title="detailData.title"></nav-bar>
     <div class="detail" v-if="detailData.title">
       <!-- 封面图 -->
       <div class="face_img" v-if="detailData.face_img">

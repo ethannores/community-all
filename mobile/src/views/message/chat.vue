@@ -2,10 +2,10 @@
   <div>
     <!-- 聊天顶部 -->
     <top-nav>
-      <template #title>
+      <template #title='{data}'>
         <div class="user_header">
           <van-image round width="1.8rem" height="1.8rem" fit="cover" :src="otherUser.avatar" />
-          <span class="username">{{otherUser.username}}</span>
+          <span class="username">{{otherUser.username}} {{data.age}}</span>
           <!-- <span class="status">在线</span> -->
         </div>
       </template>

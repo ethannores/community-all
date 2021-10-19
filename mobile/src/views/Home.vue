@@ -6,7 +6,6 @@
         <post-item :postItems="list"></post-item>
       </van-list>
     </van-pull-refresh>
-    <self-tag type="success">xxx</self-tag>
     <!-- 底部导航 -->
     <footer-nav></footer-nav>
   </div>
